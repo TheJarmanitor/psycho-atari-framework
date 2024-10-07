@@ -1,0 +1,11 @@
+[project]
+name = "cdm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "ale-py>=0.10.1",
+    "gymnasium>=0.29.1",
+    "pyxel>=2.2.3",
+]
