@@ -1,15 +1,19 @@
 import gymnasium as gym
 from gymnasium.utils.play import play
 from gymnasium.wrappers import PixelObservationWrapper
-
+import ale_py
 import pygame
 
+gym.register_envs(ale_py)
 
-class Game():
+
+class Game:
     def __init__(self, game_name) -> None:
         if not pygame.get_init():
             pygame.init()
 
-        env = gym.make(game_name, obs_type="ramd", render_mode="rgb_array", frameskip=1)
-        keys = env.unwrapped.gett_keys_to_action()
-        env.metadata["render_fps"] = 30
+        env = gym.make(game_name, obs_type="ram", render_mode="rgb_array", frameskip=1)
+
+        keys = env.unwrapped.get_keys_to_action()
+
+        play(env, keys_to_action=keys, fps=30)
