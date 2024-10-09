@@ -5,7 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "ale-py>=0.10.1",
-    "gymnasium>=0.29.1",
+    "ale-py < 0.10.1",
+    "gymnasium < 1.0.0",
+    "matplotlib>=3.9.2",
     "pygame>=2.6.1",
 ]
