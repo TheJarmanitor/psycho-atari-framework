@@ -1,9 +1,11 @@
-from game import Game
+from game import GameScreen
 
 
 def main():
-    game_name = "ALE/BattleZone-v5"
-    Game(game_name)
+    game_names = ["Turmoil", "WordZapper", "Centipede"]
+    for game in game_names:
+        GameScreen(f"ALE/{game}-v5", time_limit=5)
+
 
 
 if __name__ == "__main__":
