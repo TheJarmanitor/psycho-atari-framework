@@ -18,7 +18,7 @@ def main():
         },
     }
     game_names = list(game_list.keys())
-    for _ in range(3):
+    for _ in range(1):
         shuffle(game_names)
         for game_name in game_names:
             game_mode = choice(game_list[game_name]["modes"])
