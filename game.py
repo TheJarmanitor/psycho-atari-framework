@@ -7,14 +7,21 @@ from datetime import datetime
 import pygame
 import ale_py
 from pygame.event import Event, post
+
 # from pylsl import StreamInfo, StreamOutlet
 
 
-class GameScreen: # take difficulty into consideration. Randomizing
+class GameScreen:  # take difficulty into consideration. Randomizing
     def __init__(
-        self, game_name, time_limit=None, fps=30, game_mode=None, game_difficulty=None, logs_path="logs"
+        self,
+        game_name,
+        time_limit=None,
+        fps=30,
+        game_mode=None,
+        game_difficulty=None,
+        logs_path="logs",
     ) -> None:
-        self.time_limit=time_limit
+        self.time_limit = time_limit
         self.game_name = game_name
         self.start_timestamp = int(datetime.timestamp(datetime.now()) * 1000)
         self.fps = fps
@@ -24,11 +31,15 @@ class GameScreen: # take difficulty into consideration. Randomizing
         if not pygame.get_init():
             pygame.init()
 
-        env = gym.make(game_name, obs_type="ram", render_mode="rgb_array",
-            frameskip=1, mode=self.game_mode, difficulty=self.game_difficulty)
+        env = gym.make(
+            game_name,
+            obs_type="ram",
+            render_mode="rgb_array",
+            frameskip=1,
+            mode=self.game_mode,
+            difficulty=self.game_difficulty,
+        )
 
-        infoObject = pygame.display.Info()
-        print(infoObject)
         keys = env.unwrapped.get_keys_to_action()
         env.metadata["render_fps"] = fps
         # env_wrapper = AddRenderObservation(env, render_only=False)
@@ -42,23 +53,41 @@ class GameScreen: # take difficulty into consideration. Randomizing
     def callback(self, obs_t, obs_tp1, action, rew, terminated, truncated, info):
         timestamp = int(datetime.timestamp(datetime.now()) * 1000)
 
-        if self.time_limit and timestamp - self.start_timestamp > self.time_limit * 1000:
+        if (
+            self.time_limit
+            and timestamp - self.start_timestamp > self.time_limit * 1000
+        ):
             terminated = True
             timeout = True
         else:
             timeout = False
         self.logs.append(
-            {"game_name": self.game_name, "game_mode": self.game_mode, "game_difficulty": self.game_difficulty,
-                "start_timestamp": self.start_timestamp, "timestamp": timestamp,
-                "fps": self.fps, "obs_t": obs_t, "obs_tp1": obs_tp1, "action": action,
-                "rew": rew, "terminated": terminated, "truncated": truncated, "info": info, "timeout": timeout}
+            {
+                "game_name": self.game_name,
+                "game_mode": self.game_mode,
+                "game_difficulty": self.game_difficulty,
+                "start_timestamp": self.start_timestamp,
+                "timestamp": timestamp,
+                "fps": self.fps,
+                "obs_t": obs_t,
+                "obs_tp1": obs_tp1,
+                "action": action,
+                "rew": rew,
+                "terminated": terminated,
+                "truncated": truncated,
+                "info": info,
+                "timeout": timeout,
+            }
         )
 
         if terminated or timeout:
             post(Event(pygame.QUIT))
+
+
 class SurveyScreen:
     pass
 
-class TransitionScreen: #random restting period, but fixed
+
+class TransitionScreen:  # random restting period, but fixed
     def __init__(self) -> None:
         pass
