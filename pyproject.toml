@@ -9,4 +9,6 @@ dependencies = [
     "gymnasium < 1.0.0",
     "matplotlib>=3.9.2",
     "pygame>=2.6.1",
+    "pylsl>=1.16.2",
+    "ruff>=0.7.3",
 ]
