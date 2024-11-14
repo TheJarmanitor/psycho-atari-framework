@@ -3,7 +3,7 @@ from survey import MultipleChoiceQuestion, Survey
 from random import choice, shuffle
 
 
-def main():
+def main(): #add with "tutorial version", later with random difficulties
     questions = [
         MultipleChoiceQuestion(
             "Did you liked the game", ["Yes", "No", "How did you get in my house?"]
@@ -19,7 +19,7 @@ def main():
         },
         "Centipede": {"modes": [22, 86], "difficulties": [0]},
     }
-    game_names = list(game_list.keys())
+    game_names = list(game_list.keys()) #change to list of possiblities
     for _ in range(1):
         shuffle(game_names)
         for game_name in game_names:

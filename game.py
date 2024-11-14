@@ -11,7 +11,7 @@ from pygame.event import Event, post
 # from pylsl import StreamInfo, StreamOutlet
 
 
-class GameScreen:  # take difficulty into consideration. Randomizing
+class GameScreen:  # labels for tutorials and regular games
     def __init__(
         self,
         game_name,
