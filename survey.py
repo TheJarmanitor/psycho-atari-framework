@@ -1,5 +1,6 @@
 import pygame
 import sys
+import pandas as pd
 
 # import pandas as pd  # Importing pandas for DataFrame handling
 
@@ -34,24 +35,32 @@ class MultipleChoiceQuestion(Question):
         super().__init__(question_text)
         self.options = options
         self.selected_option = None
+        self.keybinds = {
+            -3: [pygame.],
+            -2: [""],
+            -1: [""],
+            0:
+        }
 
     def display(self, screen, font):
         """Display the multiple-choice question with options."""
         super().display(screen, font)
         for i, option in enumerate(self.options):
             color = BLUE if self.selected_option == i else BLACK
-            option_text = f"{i + 1}. {option}"
+            option_text = f"{option}"
             text_surface = font.render(option_text, True, color)
             screen.blit(text_surface, (70, 100 + i * 40))
 
     def handle_event(self, event):
         """Handle key press for selecting an option."""
         if event.type == pygame.KEYDOWN:
-            if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4]:
+            if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7]:
                 self.selected_option = event.key - pygame.K_1
                 self.response = self.options[self.selected_option]
-                return True  # Move to the next question
-        return False
+            if event.key == pygame.K_d:
+                return "next"  # Move to the next question
+            if event.key == pygame.K_a:
+                return "back"
 
 
 class ShortAnswerQuestion(Question):
@@ -101,21 +110,24 @@ class Survey:
         """Handle events for the current question."""
         if self.current_question_index < len(self.questions):
             question = self.questions[self.current_question_index]
-            if question.handle_event(event):
+            if question.handle_event(event) == "next":
                 self.current_question_index += 1  # Move to the next question
+            elif question.handle_event(event) == "back":
+                self.current_question_index -= 1 if self.current_question_index > 0 else 0
+
 
     def is_complete(self):
         """Check if the survey is complete."""
         return self.current_question_index >= len(self.questions)
 
-    # def collect_responses(self):
-    #     """Collects questions and responses into a DataFrame."""
-    #     data = {
-    #         "Question": [q.question_text for q in self.questions],
-    #         "Response": [q.response for q in self.questions],
-    #     }
-    #     df = pd.DataFrame(data)
-    #     return df
+    def collect_responses(self):
+        """Collects questions and responses into a DataFrame."""
+        data = {
+            "Question": [q.question_text for q in self.questions],
+            "Response": [q.response for q in self.questions],
+        }
+        df = pd.DataFrame(data)
+        return df
 
     def run(self, screen_width=800, screen_height=600):
         """Run the main loop for the survey."""
