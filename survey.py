@@ -35,12 +35,12 @@ class MultipleChoiceQuestion(Question):
         super().__init__(question_text)
         self.options = options
         self.selected_option = None
-        self.keybinds = {
-            -3: [pygame.],
-            -2: [""],
-            -1: [""],
-            0:
-        }
+        # self.keybinds = {
+        #     -3: [pygame.],
+        #     -2: [""],
+        #     -1: [""],
+        #     0:
+        # }
 
     def display(self, screen, font):
         """Display the multiple-choice question with options."""
@@ -61,7 +61,6 @@ class MultipleChoiceQuestion(Question):
                 return "next"  # Move to the next question
             if event.key == pygame.K_a:
                 return "back"
-
 
 class ShortAnswerQuestion(Question):
     def __init__(self, question_text):
