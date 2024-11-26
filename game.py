@@ -13,7 +13,7 @@ import hashlib
 import numpy as np
 
 
-from pylsl import StreamInfo, StreamOutlet
+# from pylsl import StreamInfo, StreamOutle&t
 
 
 class GameScreen:  # labels for tutorials and regular games
@@ -21,6 +21,7 @@ class GameScreen:  # labels for tutorials and regular games
         self,
         participant_id,
         game_name,
+        session_number=0,
         tutorial=False,
         time_limit=None,
         fps=30,
@@ -28,12 +29,15 @@ class GameScreen:  # labels for tutorials and regular games
         game_difficulty=None,
         logs_path="logs",
     ) -> None:
-        self.participant_id = participant_id,
+        self.participant_id = (participant_id,)
 
         self.time_limit = time_limit
         self.game_name = game_name
+        self.session_number = session_number
         self.tutorial = tutorial
-        self.game_id = int.from_bytes(hashlib.sha256(self.game_name.encode()).digest()[:4], 'little')
+        self.game_id = int.from_bytes(
+            hashlib.sha256(self.game_name.encode()).digest()[:4], "little"
+        )
         self.start_timestamp = int(datetime.timestamp(datetime.now()) * 1000)
         self.fps = fps
         self.logs = []
@@ -58,13 +62,26 @@ class GameScreen:  # labels for tutorials and regular games
         env_wrapper = PixelObservationWrapper(env, pixels_only=False)
         # print(keys)
 
-        play(env_wrapper, fps=self.fps, keys_to_action=keys, callback=self.callback, zoom=3)
+        play(
+            env_wrapper,
+            fps=self.fps,
+            keys_to_action=keys,
+            callback=self.callback,
+            zoom=3,
+        )
         # infoObject = pygame.display.Info()
         # print(infoObject)
         if not os.path.exists(self.logs_path):
             os.mkdir(self.logs_path)
 
-        np.savez_compressed(os.path.join(logs_path, f"{self.participant_id}".zfill(5) + f"_{self.game_id}_{self.start_timestamp}"), self.logs)
+        np.savez_compressed(
+            os.path.join(
+                logs_path,
+                f"{self.participant_id}".zfill(5)
+                + f"_{self.game_id}_{self.session_number}_{self.start_timestamp}",
+            ),
+            self.logs,
+        )
 
     def callback(self, obs_t, obs_tp1, action, rew, terminated, truncated, info):
         timestamp = int(datetime.timestamp(datetime.now()) * 1000)
@@ -80,7 +97,8 @@ class GameScreen:  # labels for tutorials and regular games
         self.logs.append(
             {
                 "participant_id": self.participant_id,
-                "tutorial":self.tutorial,
+                "session_number": self.session_number,
+                "tutorial": self.tutorial,
                 "game_id": self.game_id,
                 "game_mode": self.game_mode,
                 "game_difficulty": self.game_difficulty,
