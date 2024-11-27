@@ -13,8 +13,6 @@ def get_custom_keys_to_action(action_set, joystick=False):
         Dictionary of key values to actions
     """
     if joystick:
-        pygame.init()
-        pygame.joystick.init()
         controller = pygame.joystick.Joystick(0)
 
         UP = pygame.CONTROLLER_BUTTON_DPAD_UP
