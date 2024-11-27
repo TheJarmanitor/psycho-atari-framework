@@ -3,7 +3,7 @@ import pygame
 import ale_py
 
 # @lru_cache(1)
-def get_custom_keys_to_action(action_set):
+def get_custom_keys_to_action(action_set, joystick=False):
     """Return keymapping -> actions for human play.
 
     Up, down, left and right are wasd keys with fire being space.
@@ -12,13 +12,20 @@ def get_custom_keys_to_action(action_set):
     Returns:
         Dictionary of key values to actions
     """
-    UP = pygame.K_UP
-    LEFT = pygame.K_LEFT
-    RIGHT = pygame.K_RIGHT
-    DOWN = pygame.K_DOWN
+    if joystick:
+        pygame.joystick.init()
+
+        UP = pygame.CONTROLLER_BUTTON_DPAD_UP
+        LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
+        RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
+        DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
+    else:
+        UP = pygame.K_UP
+        LEFT = pygame.K_LEFT
+        RIGHT = pygame.K_RIGHT
+        DOWN = pygame.K_DOWN
     FIRE = pygame.K_SPACE
     NOOP = ord("e")
-    print(UP, LEFT, RIGHT, DOWN, FIRE)
 
     mapping = {
         ale_py.Action.NOOP: (NOOP,),
