@@ -29,7 +29,7 @@ class GameScreen:  # labels for tutorials and regular games
         game_difficulty=None,
         logs_path="logs",
     ) -> None:
-        self.participant_id = (participant_id,)
+        self.participant_id = participant_id
 
         self.time_limit = time_limit
         self.game_name = game_name
