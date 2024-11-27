@@ -59,7 +59,7 @@ class GameScreen:  # labels for tutorials and regular games
         action_set = env.unwrapped._action_set
         keys = get_custom_keys_to_action(action_set, joystick=True)
         # keys = env.unwrapped.get_keys_to_action()
-        print(keys)
+        # print(keys)
         env.metadata["render_fps"] = self.fps
         # env_wrapper = AddRenderObservation(env, render_only=False)
         env_wrapper = PixelObservationWrapper(env, pixels_only=False)

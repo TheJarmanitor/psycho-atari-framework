@@ -13,8 +13,8 @@ def get_custom_keys_to_action(action_set, joystick=False):
         Dictionary of key values to actions
     """
     if joystick:
-        controller = pygame.joystick.Joystick(0)
-        controller.init()
+        pygame.joystick.init()
+        print(pygame.joystick.get_count())
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.JOYAXISMOTION:
