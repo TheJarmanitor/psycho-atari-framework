@@ -1,9 +1,9 @@
-from functools import lru_cache
 import pygame
 import ale_py
 
+
 # @lru_cache(1)
-def get_custom_keys_to_action(action_set, joystick=False):
+def custom_keys_to_action(action_set):
     """Return keymapping -> actions for human play.
 
     Up, down, left and right are wasd keys with fire being space.
@@ -12,20 +12,12 @@ def get_custom_keys_to_action(action_set, joystick=False):
     Returns:
         Dictionary of key values to actions
     """
-    if joystick:
-        controller = pygame.joystick.Joystick(0)
 
-        UP = pygame.CONTROLLER_BUTTON_DPAD_UP
-        LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
-        RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
-        DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
-        FIRE = pygame.CONTROLLERBUTTONDOWN
-    else:
-        UP = pygame.K_UP
-        LEFT = pygame.K_LEFT
-        RIGHT = pygame.K_RIGHT
-        DOWN = pygame.K_DOWN
-        FIRE = pygame.K_SPACE
+    UP = pygame.K_w
+    LEFT = pygame.K_a
+    RIGHT = pygame.K_d
+    DOWN = pygame.K_s
+    FIRE = pygame.K_SPACE
     NOOP = ord("e")
 
     mapping = {
@@ -53,6 +45,51 @@ def get_custom_keys_to_action(action_set, joystick=False):
     #   (key, key, ...) -> action_idx
     # where action_idx is the integer value of the action enum
     #
-    return {
-        tuple(sorted(mapping[act_idx])): act_idx for act_idx in action_set
-    }
+    return {tuple(sorted(mapping[act_idx])): act_idx for act_idx in action_set}
+
+
+def joystick_to_keys(action_set):
+    """
+    Translate joystick input to the corresponding keys for the Arcade Learning Environment.
+
+    Args:
+        action_set (list): List of actions available in the environment.
+
+    Returns:
+        dict: A mapping of joystick states to action indices.
+    """
+    # Axis mappings for a standard joystick
+
+    # Initialize pygame joystick if not already initialized
+    joystick = pygame.joystick.Joystick(0)
+
+    joystick.init()
+
+    # Directional input states
+
+    # Button states
+    fire_button = joystick.get_button(
+        0
+    )  # Assuming the 'A' button or similar is used for fire
+
+    # Translate joystick input to actions
+    actions = set()
+
+    if joystick.get_hat(0)[1]:  # Up
+        actions.add(pygame.K_UP)
+    elif joystick.get_hat(0)[1] == -1:  # Down
+        actions.add(pygame.K_DOWN)
+
+    if joystick.get_hat(0)[0] == -1:  # Left
+        actions.add(pygame.K_LEFT)
+    elif joystick.get_hat(0)[0] == -1:  # Right
+        actions.add(pygame.K_RIGHT)
+
+    if fire_button:  # Fire
+        actions.add(pygame.K_SPACE)
+
+    # Map the joystick input to the predefined key-to-action mapping
+    key_to_action = custom_keys_to_action(action_set)
+    sorted_actions = tuple(sorted(actions))  # Sort for consistent lookup
+
+    return key_to_action.get(sorted_actions, ale_py.Action.NOOP)
