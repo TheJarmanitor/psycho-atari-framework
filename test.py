@@ -10,6 +10,7 @@ def main():
     #     game_name = "ALE/Centipede-v5",
     #     time_limit=15
     # )
+    pygame.init()
     pygame.joystick.init()
     controller = pygame.joystick.Joystick(0)
     while True:
