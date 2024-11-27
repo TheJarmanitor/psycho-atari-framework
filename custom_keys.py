@@ -1,5 +1,5 @@
 from functools import lru_cache
-import keyboard
+import pygame
 import ale_py
 
 # @lru_cache(1)
@@ -12,11 +12,11 @@ def get_custom_keys_to_action(action_set):
     Returns:
         Dictionary of key values to actions
     """
-    UP = keyboard.press("left arrow")
-    LEFT = ord("←")
-    RIGHT = ord("→")
-    DOWN = ord("↓")
-    FIRE = ord("↵")
+    UP = pygame.K_UP
+    LEFT = pygame.K_LEFT
+    RIGHT = pygame.K_RIGHT
+    DOWN = pygame.K_DOWN
+    FIRE = pygame.K_SPACE
     NOOP = ord("e")
     print(UP, LEFT, RIGHT, DOWN, FIRE)
 
