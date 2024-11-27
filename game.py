@@ -2,6 +2,7 @@ import os
 
 import gymnasium as gym
 from gymnasium.utils.play import play
+from custom_keys import get_custom_keys_to_action
 
 # from gymnasium.wrappers import AddRenderObservation
 from gymnasium.wrappers import PixelObservationWrapper
@@ -55,8 +56,10 @@ class GameScreen:  # labels for tutorials and regular games
             mode=self.game_mode,
             difficulty=self.game_difficulty,
         )
-
-        keys = env.unwrapped.get_keys_to_action()
+        action_set = env.unwrapped._action_set
+        keys = get_custom_keys_to_action(action_set)
+        # keys = env.unwrapped.get_keys_to_action()
+        print(keys)
         env.metadata["render_fps"] = self.fps
         # env_wrapper = AddRenderObservation(env, render_only=False)
         env_wrapper = PixelObservationWrapper(env, pixels_only=False)
