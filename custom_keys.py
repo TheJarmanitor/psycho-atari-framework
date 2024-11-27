@@ -27,11 +27,11 @@ def get_custom_keys_to_action(action_set, joystick=False):
                 print(event.dict, event.joy, event.button, 'released')
             elif event.type == pygame.JOYHATMOTION:
                 print(event.dict, event.joy, event.hat, event.value)
-        # UP = pygame.CONTROLLER_BUTTON_DPAD_UP
-        # LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
-        # RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
-        # DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
-        # FIRE = controller.get_button(3)
+        UP = pygame.CONTROLLER_BUTTON_DPAD_UP
+        LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
+        RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
+        DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
+        FIRE = controller.get_button(3)
     else:
         UP = pygame.K_UP
         LEFT = pygame.K_LEFT
