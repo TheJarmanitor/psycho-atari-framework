@@ -18,8 +18,14 @@ def main():
         for event in events:
             if event.type == pygame.JOYBUTTONDOWN:
                 print("Button Pressed")
-            #     if j.get_button(6):
-            #         # Control Left Motor using L2
+                if controller.get_button(0):
+                    print("This is the 0 button")
+                if controller.get_button(1):
+                    print("This is the 1 button")
+                if controller.get_button(2):
+                    print("This is the 2 button")
+                if controller.get_button(3):
+                    print("This is the 3 button")
             #     elif j.get_button(7):
             #         # Control Right Motor using R2
             # elif event.type == pygame.JOYBUTTONUP:
