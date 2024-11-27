@@ -13,14 +13,25 @@ def get_custom_keys_to_action(action_set, joystick=False):
         Dictionary of key values to actions
     """
     if joystick:
-        pygame.joystick.init()
         controller = pygame.joystick.Joystick(0)
-
-        UP = pygame.CONTROLLER_BUTTON_DPAD_UP
-        LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
-        RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
-        DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
-        FIRE = controller.get_button(3)
+        controller.init()
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.JOYAXISMOTION:
+                print(event.dict, event.joy, event.axis, event.value)
+            elif event.type == pygame.JOYBALLMOTION:
+                print(event.dict, event.joy, event.ball, event.rel)
+            elif event.type == pygame.JOYBUTTONDOWN:
+                print(event.dict, event.joy, event.button, 'pressed')
+            elif event.type == pygame.JOYBUTTONUP:
+                print(event.dict, event.joy, event.button, 'released')
+            elif event.type == pygame.JOYHATMOTION:
+                print(event.dict, event.joy, event.hat, event.value)
+        # UP = pygame.CONTROLLER_BUTTON_DPAD_UP
+        # LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
+        # RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
+        # DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
+        # FIRE = controller.get_button(3)
     else:
         UP = pygame.K_UP
         LEFT = pygame.K_LEFT
