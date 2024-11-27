@@ -15,6 +15,7 @@ def get_custom_keys_to_action(action_set, joystick=False):
     if joystick:
         pygame.joystick.init()
         print(pygame.joystick.get_count())
+        controller = pygame.joystick.Joystick(0)
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.JOYAXISMOTION:
