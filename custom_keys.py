@@ -14,17 +14,19 @@ def get_custom_keys_to_action(action_set, joystick=False):
     """
     if joystick:
         pygame.joystick.init()
+        controller = pygame.joystick.Joystick(0)
 
         UP = pygame.CONTROLLER_BUTTON_DPAD_UP
         LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
         RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
         DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
+        FIRE = controller.get_button(3)
     else:
         UP = pygame.K_UP
         LEFT = pygame.K_LEFT
         RIGHT = pygame.K_RIGHT
         DOWN = pygame.K_DOWN
-    FIRE = pygame.K_SPACE
+        FIRE = pygame.K_SPACE
     NOOP = ord("e")
 
     mapping = {
