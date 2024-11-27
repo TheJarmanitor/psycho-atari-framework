@@ -21,7 +21,7 @@ def get_custom_keys_to_action(action_set, joystick=False):
         LEFT = pygame.CONTROLLER_BUTTON_DPAD_LEFT
         RIGHT = pygame.CONTROLLER_BUTTON_DPAD_RIGHT
         DOWN = pygame.CONTROLLER_BUTTON_DPAD_DOWN
-        FIRE = pygame.JOYBUTTONDOWN
+        FIRE = pygame.CONTROLLERBUTTONDOWN
     else:
         UP = pygame.K_UP
         LEFT = pygame.K_LEFT

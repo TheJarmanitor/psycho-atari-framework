@@ -57,7 +57,7 @@ class GameScreen:  # labels for tutorials and regular games
             difficulty=self.game_difficulty,
         )
         action_set = env.unwrapped._action_set
-        keys = get_custom_keys_to_action(action_set, joystick=True)
+        keys = get_custom_keys_to_action(action_set)
         # keys = env.unwrapped.get_keys_to_action()
         # print(keys)
         env.metadata["render_fps"] = self.fps
