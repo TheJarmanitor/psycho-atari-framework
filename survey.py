@@ -1,5 +1,5 @@
 import pygame
-import sys
+import os
 import pandas as pd
 
 # import pandas as pd  # Importing pandas for DataFrame handling
@@ -52,15 +52,25 @@ class MultipleChoiceQuestion(Question):
             screen.blit(text_surface, (70, 100 + i * 40))
 
     def handle_event(self, event):
+        scale = [
+            pygame.K_KP1,
+            pygame.K_KP2,
+            pygame.K_KP3,
+            pygame.K_KP5,
+            pygame.K_KP7,
+            pygame.K_KP8,
+            pygame.K_KP9,
+        ]
         """Handle key press for selecting an option."""
         if event.type == pygame.KEYDOWN:
-            if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7]:
-                self.selected_option = event.key - pygame.K_1
+            if event.key in scale:
+                self.selected_option = scale.index(event.key)
                 self.response = self.options[self.selected_option]
-            if event.key == pygame.K_d:
+            if event.key == pygame.K_KP6:
                 return "next"  # Move to the next question
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_KP4:
                 return "back"
+
 
 class ShortAnswerQuestion(Question):
     def __init__(self, question_text):
@@ -112,21 +122,26 @@ class Survey:
             if question.handle_event(event) == "next":
                 self.current_question_index += 1  # Move to the next question
             elif question.handle_event(event) == "back":
-                self.current_question_index -= 1 if self.current_question_index > 0 else 0
-
+                self.current_question_index -= (
+                    1 if self.current_question_index > 0 else 0
+                )
 
     def is_complete(self):
         """Check if the survey is complete."""
         return self.current_question_index >= len(self.questions)
 
-    def collect_responses(self):
+    def collect_responses(self, data_file, surveyor_info):
         """Collects questions and responses into a DataFrame."""
         data = {
-            "Question": [q.question_text for q in self.questions],
-            "Response": [q.response for q in self.questions],
+            question.question_text: [question.response] for question in self.questions
         }
-        df = pd.DataFrame(data)
-        return df
+        surveyor_info.update(data)
+        df = pd.DataFrame(surveyor_info)
+        if os.path.exists(data_file):
+            df_historic = pd.read_csv(data_file)
+            df = pd.concat([df_historic, df], ignore_index=True, axis=0)
+
+        df.to_csv(data_file, index=False)
 
     def run(self, screen_width=800, screen_height=600):
         """Run the main loop for the survey."""

@@ -32,21 +32,19 @@ def main():  # add with "tutorial version", later with random difficulties
     game_list = {
         k: list(itertools.product(*v.values())) for (k, v) in game_details.items()
     }
-    print(game_list)
+    game_names = list(game_details.keys())  # change to list of possiblities
 
     ## Tutorial version
 
-    game_names = list(game_details.keys())  # change to list of possiblities
-    print(game_names)
-    for game in game_names:
-        GameScreen(
-            participant_id=participant_id,
-            game_name=f"ALE/{game}-v5",
-            time_limit=30,
-            game_mode=game_details[game]["modes"][0],
-            game_difficulty=game_details[game]["difficulties"][0],
-            tutorial=True,
-        )
+    # for game in game_names:
+    #     GameScreen(
+    #         participant_id=participant_id,
+    #         game_name=f"ALE/{game}-v5",
+    #         time_limit=30,
+    #         game_mode=game_details[game]["modes"][0],
+    #         game_difficulty=game_details[game]["difficulties"][0],
+    #         tutorial=True,
+    #     )
 
     for i in range(2):
         shuffle(game_names)
@@ -57,7 +55,7 @@ def main():  # add with "tutorial version", later with random difficulties
             GameScreen(
                 participant_id=participant_id,
                 game_name=f"ALE/{game_name}-v5",
-                time_limit=30,
+                time_limit=5,
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
                 session_number=i + 1,
@@ -65,6 +63,13 @@ def main():  # add with "tutorial version", later with random difficulties
             shuffle(questions)
             survey = Survey(deepcopy(questions))
             survey.run()
+            extra_info = {
+                "participant_id": [participant_id],
+                "game": [game_name],
+                "mode": [game_mode],
+                "difficulty": [game_difficulty],
+            }
+            survey.collect_responses("survey_responses.csv", surveyor_info=extra_info)
 
 
 if __name__ == "__main__":
