@@ -2,7 +2,7 @@ import os
 
 import gymnasium as gym
 from gymnasium.utils.play import play
-from custom_keys import custom_keys_to_action, joystick_to_keys
+from custom_keys import custom_keys_to_action
 
 # from gymnasium.wrappers import AddRenderObservation
 from gymnasium.wrappers import PixelObservationWrapper
@@ -59,14 +59,11 @@ class GameScreen:  # labels for tutorials and regular games
         )
         action_set = env.unwrapped._action_set
 
-        keys = joystick_to_keys(action_set)
-        # keys = env.unwrapped.get_keys_to_action()
-        print(keys)
         env.metadata["render_fps"] = self.fps
         # env_wrapper = AddRenderObservation(env, render_only=False)
         env_wrapper = PixelObservationWrapper(env, pixels_only=False)
         # print(keys)
-
+        keys = custom_keys_to_action(action_set)
         play(
             env_wrapper,
             fps=self.fps,
@@ -83,7 +80,7 @@ class GameScreen:  # labels for tutorials and regular games
             os.path.join(
                 logs_path,
                 f"{self.participant_id}".zfill(5)
-                + f"_{self.game_id}_{self.session_number}_{self.start_timestamp}",
+                + f"_{self.game_id}_{'tutorial' if self.tutorial else self.session_number}_{self.start_timestamp}",
             ),
             self.logs,
         )
