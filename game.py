@@ -58,7 +58,6 @@ class GameScreen:  # labels for tutorials and regular games
             difficulty=self.game_difficulty,
         )
         action_set = env.unwrapped._action_set
-
         env.metadata["render_fps"] = self.fps
         # env_wrapper = AddRenderObservation(env, render_only=False)
         env_wrapper = PixelObservationWrapper(env, pixels_only=False)

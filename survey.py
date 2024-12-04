@@ -1,6 +1,7 @@
 import pygame
 import os
 import pandas as pd
+from random import randint
 
 # import pandas as pd  # Importing pandas for DataFrame handling
 
@@ -45,21 +46,31 @@ class MultipleChoiceQuestion(Question):
     def display(self, screen, font):
         """Display the multiple-choice question with options."""
         super().display(screen, font)
+        positions = [
+                    (200, 150),  # Agree row: Strongly Agree
+                    (400, 150),  # Agree row: Agree
+                    (600, 150),  # Agree row: Slightly Agree
+                    (400, 250),  # Neutral
+                    (200, 350),  # Disagree row: Strongly Disagree
+                    (400, 350),  # Disagree row: Disagree
+                    (600, 350),  # Disagree row: Slightly Disagree
+                ]
         for i, option in enumerate(self.options):
             color = BLUE if self.selected_option == i else BLACK
             option_text = f"{option}"
             text_surface = font.render(option_text, True, color)
-            screen.blit(text_surface, (70, 100 + i * 40))
+            x, y = positions[i]
+            screen.blit(text_surface, (x,y))
 
     def handle_event(self, event):
         scale = [
-            pygame.K_KP1,
-            pygame.K_KP2,
-            pygame.K_KP3,
-            pygame.K_KP5,
             pygame.K_KP7,
             pygame.K_KP8,
             pygame.K_KP9,
+            pygame.K_KP5,
+            pygame.K_KP1,
+            pygame.K_KP2,
+            pygame.K_KP3,
         ]
         """Handle key press for selecting an option."""
         if event.type == pygame.KEYDOWN:
@@ -110,7 +121,7 @@ class Survey:
             self.questions[self.current_question_index].display(self.screen, self.font)
         else:
             # Display a thank-you message when the survey is complete
-            thank_you_text = "Thank you for completing the survey!"
+            thank_you_text = f"Thank you for completing the survey!\nNow Relax for a bit :)"
             text_surface = self.font.render(thank_you_text, True, GREEN)
             self.screen.blit(text_surface, (200, 250))
         pygame.display.flip()
@@ -143,7 +154,7 @@ class Survey:
 
         df.to_csv(data_file, index=False)
 
-    def run(self, screen_width=800, screen_height=600):
+    def run(self, screen_width=1200, screen_height=600, random_timer=True):
         """Run the main loop for the survey."""
         if not pygame.get_init():
             pygame.init()
@@ -162,7 +173,11 @@ class Survey:
 
             # Exit the survey after completion and short delay
             if self.is_complete():
-                pygame.time.delay(2000)
+                if random_timer:
+                    timer = randint(2, 10) * 1000
+                else:
+                    timer = 2000
+                pygame.time.delay(timer)
                 self.running = False
 
         # Quit Pygame and exit when the survey is done

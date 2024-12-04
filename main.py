@@ -8,13 +8,13 @@ import itertools
 
 def main():  # add with "tutorial version", later with random difficulties
     answers = [
-        "Strongly disagree",
-        "Disagree",
-        "slightly disagree",
-        "Neutral",
         "Slightly agree",
         "Agree",
         "Strongly Agree",
+        "Neutral",
+        "slightly disagree",
+        "Disagree",
+        "Strongly disagree",
     ]
     participant_id = str(uuid.uuid4())
     with open("miniPXI.txt", "r") as f:
@@ -26,7 +26,7 @@ def main():  # add with "tutorial version", later with random difficulties
             "modes": [x for x in range(4)],
             "difficulties": [x for x in range(4)],
         },
-        "Centipede": {"modes": [22, 86], "difficulties": [0]},
+        "Boxing": {"modes": [0], "difficulties": [x for x in range(4)]},
     }
 
     game_list = {
@@ -40,15 +40,14 @@ def main():  # add with "tutorial version", later with random difficulties
     #     GameScreen(
     #         participant_id=participant_id,
     #         game_name=f"ALE/{game}-v5",
-    #         time_limit=30,
+    #         time_limit=60,
     #         game_mode=game_details[game]["modes"][0],
     #         game_difficulty=game_details[game]["difficulties"][0],
     #         tutorial=True,
     #     )
 
-    for i in range(2):
+    for i in range(3):
         shuffle(game_names)
-        print(game_names)
         for game_name in game_names:
             shuffle(game_list[game_name])
             game_mode, game_difficulty = game_list[game_name].pop()
@@ -60,11 +59,13 @@ def main():  # add with "tutorial version", later with random difficulties
                 game_difficulty=game_difficulty,
                 session_number=i + 1,
             )
+
             shuffle(questions)
             survey = Survey(deepcopy(questions))
             survey.run()
             extra_info = {
                 "participant_id": [participant_id],
+                "session_number":[i+1],
                 "game": [game_name],
                 "mode": [game_mode],
                 "difficulty": [game_difficulty],
