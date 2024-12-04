@@ -23,6 +23,7 @@ class GameScreen:  # labels for tutorials and regular games
         participant_id,
         game_name,
         session_number=0,
+        fullscreen=False,
         tutorial=False,
         time_limit=None,
         fps=30,
@@ -48,7 +49,8 @@ class GameScreen:  # labels for tutorials and regular games
         self.game_difficulty = game_difficulty
         if not pygame.get_init():
             pygame.init()
-
+        if fullscreen:
+                pygame.RESIZABLE = pygame.FULLSCREEN
         env = gym.make(
             self.game_name,
             obs_type="ram",

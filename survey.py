@@ -138,7 +138,7 @@ class Survey:
             self.questions[self.current_question_index].display(self.screen, self.font)
         else:
             # Display a thank-you message when the survey is complete
-            thank_you_text = f"Thank you for completing the survey!\nNow Relax for a bit :)"
+            thank_you_text = "You're done! Now Relax for a bit :)"
             text_surface = self.font.render(thank_you_text, True, GREEN)
             self.screen.blit(text_surface, (self.screen_width // 4, self.screen_height // 2))
         pygame.display.flip()
