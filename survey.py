@@ -46,15 +46,22 @@ class MultipleChoiceQuestion(Question):
     def display(self, screen, font):
         """Display the multiple-choice question with options."""
         super().display(screen, font)
+        screen_width, screen_height = screen.get_size()
+
+                # Dynamically calculate positions based on screen size
+        row_height = screen_height // 6
+        col_width = screen_width // 4
+
+        # Define matrix layout
         positions = [
-                    (200, 150),  # Agree row: Strongly Agree
-                    (400, 150),  # Agree row: Agree
-                    (600, 150),  # Agree row: Slightly Agree
-                    (400, 250),  # Neutral
-                    (200, 350),  # Disagree row: Strongly Disagree
-                    (400, 350),  # Disagree row: Disagree
-                    (600, 350),  # Disagree row: Slightly Disagree
-                ]
+            (col_width, row_height),                 # Top Row: Slightly Agree
+            (2 * col_width, row_height),             # Top Row: Agree
+            (3 * col_width, row_height),             # Top Row: Strongly Agree
+            (2 * col_width, 2 * row_height),         # Middle Row: Neutral
+            (col_width, 3 * row_height),             # Bottom Row: Slightly Disagree
+            (2 * col_width, 3 * row_height),         # Bottom Row: Disagree
+            (3 * col_width, 3 * row_height),         # Bottom Row: Strongly Disagree
+        ]
         for i, option in enumerate(self.options):
             color = BLUE if self.selected_option == i else BLACK
             option_text = f"{option}"
@@ -109,10 +116,20 @@ class ShortAnswerQuestion(Question):
 
 # Survey Class with screen management and DataFrame collection
 class Survey:
-    def __init__(self, questions):
+    def __init__(self, questions, screen_width=800, screen_height=600, fullscreen=False):
         self.questions = questions
         self.current_question_index = 0
         self.running = True
+        self.fullscreen = fullscreen
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
+        pygame.init()
+        self.screen = pygame.display.set_mode(
+            (screen_width, screen_height), pygame.FULLSCREEN if fullscreen else 0
+        )
+        pygame.display.set_caption("Survey")
+        self.font = pygame.font.Font(None, FONT_SIZE)
 
     def display_current_question(self):
         """Display the current question or thank-you message if survey is complete."""
@@ -123,7 +140,7 @@ class Survey:
             # Display a thank-you message when the survey is complete
             thank_you_text = f"Thank you for completing the survey!\nNow Relax for a bit :)"
             text_surface = self.font.render(thank_you_text, True, GREEN)
-            self.screen.blit(text_surface, (200, 250))
+            self.screen.blit(text_surface, (self.screen_width // 4, self.screen_height // 2))
         pygame.display.flip()
 
     def handle_event(self, event):
@@ -154,13 +171,13 @@ class Survey:
 
         df.to_csv(data_file, index=False)
 
-    def run(self, screen_width=1200, screen_height=600, random_timer=True):
+    def run(self, random_timer=True):
         """Run the main loop for the survey."""
-        if not pygame.get_init():
-            pygame.init()
-        self.screen = pygame.display.set_mode((screen_width, screen_height))
-        pygame.display.set_caption("Survey")
-        self.font = pygame.font.Font(None, FONT_SIZE)
+        # if not pygame.get_init():
+        #     pygame.init()
+        # self.screen = pygame.display.set_mode((screen_width, screen_height))
+        # pygame.display.set_caption("Survey")
+        # self.font = pygame.font.Font(None, FONT_SIZE)
 
         while self.running:
             for event in pygame.event.get():

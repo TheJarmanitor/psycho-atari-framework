@@ -61,7 +61,7 @@ def main():  # add with "tutorial version", later with random difficulties
             )
 
             shuffle(questions)
-            survey = Survey(deepcopy(questions))
+            survey = Survey(deepcopy(questions), screen_width=1400, screen_height=600)
             survey.run()
             extra_info = {
                 "participant_id": [participant_id],
