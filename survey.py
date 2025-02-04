@@ -60,7 +60,7 @@ class MultipleChoiceQuestion(Question):
             (2 * col_width, 2 * row_height),         # Middle Row: Neutral
             (col_width, 3 * row_height),             # Bottom Row: Slightly Disagree
             (2 * col_width, 3 * row_height),         # Bottom Row: Disagree
-            (3 * col_width, 3 * row_height),         # Bottom Row: Strongly Disagree
+            (3 * col_width, 3 * row_height),         # Bottom Row: Strongly Disagreewww 
         ]
         for i, option in enumerate(self.options):
             color = BLUE if self.selected_option == i else BLACK
@@ -71,22 +71,25 @@ class MultipleChoiceQuestion(Question):
 
     def handle_event(self, event):
         scale = [
-            pygame.K_KP7,
-            pygame.K_KP8,
-            pygame.K_KP9,
-            pygame.K_KP5,
-            pygame.K_KP1,
-            pygame.K_KP2,
-            pygame.K_KP3,
+	    pygame.K_1,
+            pygame.K_2,
+            pygame.K_3,
+            pygame.K_5,
+            pygame.K_7,
+            pygame.K_8,
+            pygame.K_9
+            
         ]
         """Handle key press for selecting an option."""
         if event.type == pygame.KEYDOWN:
             if event.key in scale:
                 self.selected_option = scale.index(event.key)
                 self.response = self.options[self.selected_option]
-            if event.key == pygame.K_KP6:
+                #
+                #return "next"
+            if event.key == pygame.K_6:
                 return "next"  # Move to the next question
-            if event.key == pygame.K_KP4:
+            if event.key == pygame.K_4:
                 return "back"
 
 
@@ -148,6 +151,7 @@ class Survey:
         if self.current_question_index < len(self.questions):
             question = self.questions[self.current_question_index]
             if question.handle_event(event) == "next":
+                
                 self.current_question_index += 1  # Move to the next question
             elif question.handle_event(event) == "back":
                 self.current_question_index -= (

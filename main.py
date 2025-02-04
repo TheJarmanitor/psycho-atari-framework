@@ -36,16 +36,6 @@ def main():  # add with "tutorial version", later with random difficulties
 
     ## Tutorial version
 
-    for game in game_names:
-        GameScreen(
-            participant_id=participant_id,
-            game_name=f"ALE/{game}-v5",
-            time_limit=10,
-            game_mode=game_details[game]["modes"][0],
-            game_difficulty=game_details[game]["difficulties"][0],
-            tutorial=True
-        )
-
     for i in range(3):
         shuffle(game_names)
         for game_name in game_names:
@@ -54,14 +44,14 @@ def main():  # add with "tutorial version", later with random difficulties
             GameScreen(
                 participant_id=participant_id,
                 game_name=f"ALE/{game_name}-v5",
-                time_limit=10,
+                time_limit=100,
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
                 session_number=i + 1
             )
 
             shuffle(questions)
-            survey = Survey(deepcopy(questions), screen_width=1600, screen_height=1200)
+            survey = Survey(deepcopy(questions), screen_width=1000, screen_height=600)
             survey.run()
             extra_info = {
                 "participant_id": [participant_id],

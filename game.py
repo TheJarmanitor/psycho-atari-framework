@@ -58,6 +58,7 @@ class GameScreen:  # labels for tutorials and regular games
             frameskip=1,
             mode=self.game_mode,
             difficulty=self.game_difficulty,
+            full_action_space=True
         )
         action_set = env.unwrapped._action_set
         env.metadata["render_fps"] = self.fps
