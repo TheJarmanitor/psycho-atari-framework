@@ -48,37 +48,36 @@ class MultipleChoiceQuestion(Question):
         super().display(screen, font)
         screen_width, screen_height = screen.get_size()
 
-                # Dynamically calculate positions based on screen size
+        # Dynamically calculate positions based on screen size
         row_height = screen_height // 6
         col_width = screen_width // 4
 
         # Define matrix layout
         positions = [
-            (col_width, row_height),                 # Top Row: Slightly Agree
-            (2 * col_width, row_height),             # Top Row: Agree
-            (3 * col_width, row_height),             # Top Row: Strongly Agree
-            (2 * col_width, 2 * row_height),         # Middle Row: Neutral
-            (col_width, 3 * row_height),             # Bottom Row: Slightly Disagree
-            (2 * col_width, 3 * row_height),         # Bottom Row: Disagree
-            (3 * col_width, 3 * row_height),         # Bottom Row: Strongly Disagreewww 
+            (col_width, row_height),  # Top Row: Slightly Agree
+            (2 * col_width, row_height),  # Top Row: Agree
+            (3 * col_width, row_height),  # Top Row: Strongly Agree
+            (2 * col_width, 2 * row_height),  # Middle Row: Neutral
+            (col_width, 3 * row_height),  # Bottom Row: Slightly Disagree
+            (2 * col_width, 3 * row_height),  # Bottom Row: Disagree
+            (3 * col_width, 3 * row_height),  # Bottom Row: Strongly Disagreewww
         ]
         for i, option in enumerate(self.options):
             color = BLUE if self.selected_option == i else BLACK
             option_text = f"{option}"
             text_surface = font.render(option_text, True, color)
             x, y = positions[i]
-            screen.blit(text_surface, (x,y))
+            screen.blit(text_surface, (x, y))
 
     def handle_event(self, event):
         scale = [
-	    pygame.K_1,
+            pygame.K_1,
             pygame.K_2,
             pygame.K_3,
             pygame.K_5,
             pygame.K_7,
             pygame.K_8,
-            pygame.K_9
-            
+            pygame.K_9,
         ]
         """Handle key press for selecting an option."""
         if event.type == pygame.KEYDOWN:
@@ -86,7 +85,7 @@ class MultipleChoiceQuestion(Question):
                 self.selected_option = scale.index(event.key)
                 self.response = self.options[self.selected_option]
                 #
-                #return "next"
+                # return "next"
             if event.key == pygame.K_6:
                 return "next"  # Move to the next question
             if event.key == pygame.K_4:
@@ -119,13 +118,25 @@ class ShortAnswerQuestion(Question):
 
 # Survey Class with screen management and DataFrame collection
 class Survey:
-    def __init__(self, questions, screen_width=800, screen_height=600, fullscreen=False):
+    def __init__(
+        self,
+        participant_id,
+        game_id,
+        questions,
+        screen_width=800,
+        screen_height=600,
+        fullscreen=False,
+        outlet=None,
+    ):
+        self.participant_id = participant_id,
+        self.game_id = game_id,
         self.questions = questions
         self.current_question_index = 0
         self.running = True
         self.fullscreen = fullscreen
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.outlet = outlet
 
         pygame.init()
         self.screen = pygame.display.set_mode(
@@ -143,7 +154,9 @@ class Survey:
             # Display a thank-you message when the survey is complete
             thank_you_text = "You're done! Now Relax for a bit :)"
             text_surface = self.font.render(thank_you_text, True, GREEN)
-            self.screen.blit(text_surface, (self.screen_width // 4, self.screen_height // 2))
+            self.screen.blit(
+                text_surface, (self.screen_width // 4, self.screen_height // 2)
+            )
         pygame.display.flip()
 
     def handle_event(self, event):
@@ -151,7 +164,6 @@ class Survey:
         if self.current_question_index < len(self.questions):
             question = self.questions[self.current_question_index]
             if question.handle_event(event) == "next":
-                
                 self.current_question_index += 1  # Move to the next question
             elif question.handle_event(event) == "back":
                 self.current_question_index -= (

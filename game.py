@@ -14,9 +14,6 @@ import hashlib
 import numpy as np
 
 
-# from pylsl import StreamInfo, StreamOutle&t
-
-
 class GameScreen:  # labels for tutorials and regular games
     def __init__(
         self,
@@ -31,6 +28,7 @@ class GameScreen:  # labels for tutorials and regular games
         game_difficulty=None,
         logs_path="logs",
         joystick=False,
+        outlet=None,
     ) -> None:
         self.participant_id = participant_id
 
@@ -47,10 +45,11 @@ class GameScreen:  # labels for tutorials and regular games
         self.logs_path = logs_path
         self.game_mode = game_mode
         self.game_difficulty = game_difficulty
+        self.outlet = outlet
         if not pygame.get_init():
             pygame.init()
         if fullscreen:
-                pygame.RESIZABLE = pygame.FULLSCREEN
+            pygame.RESIZABLE = pygame.FULLSCREEN
         env = gym.make(
             self.game_name,
             obs_type="ram",
@@ -58,7 +57,7 @@ class GameScreen:  # labels for tutorials and regular games
             frameskip=1,
             mode=self.game_mode,
             difficulty=self.game_difficulty,
-            full_action_space=True
+            full_action_space=True,
         )
         action_set = env.unwrapped._action_set
         env.metadata["render_fps"] = self.fps
@@ -89,6 +88,17 @@ class GameScreen:  # labels for tutorials and regular games
 
     def callback(self, obs_t, obs_tp1, action, rew, terminated, truncated, info):
         timestamp = int(datetime.timestamp(datetime.now()) * 1000)
+
+        if self.outlet:
+            self.outlet.push_sample(
+                [
+                    self.participant_id,
+                    self.game_id,
+                    self.start_timestamp,
+                    timestamp,
+                    info["frame_number"],
+                ]
+            )
 
         if (
             self.time_limit

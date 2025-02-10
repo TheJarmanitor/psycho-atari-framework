@@ -47,7 +47,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 time_limit=100,
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
-                session_number=i + 1
+                session_number=i + 1,
             )
 
             shuffle(questions)
@@ -55,7 +55,7 @@ def main():  # add with "tutorial version", later with random difficulties
             survey.run()
             extra_info = {
                 "participant_id": [participant_id],
-                "session_number":[i+1],
+                "session_number": [i + 1],
                 "game": [game_name],
                 "mode": [game_mode],
                 "difficulty": [game_difficulty],
