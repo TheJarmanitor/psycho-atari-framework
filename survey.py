@@ -120,16 +120,16 @@ class ShortAnswerQuestion(Question):
 class Survey:
     def __init__(
         self,
-        participant_id,
-        game_id,
+        # participant_id,
+        # game_id,
         questions,
         screen_width=800,
         screen_height=600,
         fullscreen=False,
         outlet=None,
     ):
-        self.participant_id = participant_id,
-        self.game_id = game_id,
+        # self.participant_id = participant_id,
+        # self.game_id = game_id,
         self.questions = questions
         self.current_question_index = 0
         self.running = True
