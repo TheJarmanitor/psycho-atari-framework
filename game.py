@@ -13,6 +13,8 @@ from pygame.event import Event, post
 import hashlib
 import numpy as np
 
+import time
+
 
 class GameScreen:  # labels for tutorials and regular games
     def __init__(
@@ -132,3 +134,41 @@ class GameScreen:  # labels for tutorials and regular games
 
         if terminated or timeout:
             post(Event(pygame.QUIT))
+
+
+class StartScreen:
+    def __init__(self, screen_width=800, screen_height=600, countdown=3, outlet=None):
+        pygame.init()
+        self.screen = pygame.display.set_mode((screen_width, screen_height))
+        self.font = pygame.font.Font(None, 48)
+        self.running = True
+        self.countdown = countdown
+        self.started = False
+
+    def display_message(self, message):
+        self.screen.fill((0,0,0))
+        text_surface = self.font.render(message, True, (255, 0, 0))
+        text_rect = text_surface.get_rect(center = (self.screen.get_width() //2, self.screen.get_height() //2))
+        self.screen.blit(text_surface, text_rect)
+        pygame.display.flip()
+
+    def wait_for_start(self):
+        self.display_message("Please wait. The experiment should start soon")
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                elif event.type == pygame.KEYDOWN and event.key == pygame. K_RETURN:
+                    self.start_countdown()
+                    return
+
+    def start_countdown(self):
+        for i in range(self.countdown, 0, -1):
+            self.display_message(f"Experiment begins in {i}...")
+            time.sleep(1)
+
+            self.running = False
+
+    def run(self):
+        self.wait_for_start()
+        pygame.quit()

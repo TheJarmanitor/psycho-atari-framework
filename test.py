@@ -1,8 +1,9 @@
-# from game import GameScreen
+from game import GameScreen, StartScreen
 import numpy as np
 
 def main():
-    # GameScreen(participant_id=0, game_name="ALE/Centipede-v5", time_limit=15)
+    StartScreen().run()
+    GameScreen(participant_id=0, game_name="ALE/WordZapper-v5")
     # pygame.init()
     # controller = pygame.joystick.Joystick(0)
     # while True:
@@ -16,7 +17,7 @@ def main():
     #         if event.type == pygame.JOYHATMOTION:
 
     #             print(event)
-    pass
+
 
 
 if __name__ == "__main__":
