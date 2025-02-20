@@ -55,10 +55,9 @@ wheels = [
 [[package]]
 name = "brainlablsl"
 version = "0.0.1"
-source = { git = "https://github.itu.dk/brAInLab/recording-eye-tracking.git#941e29ccda6d6991de69c1ad31862985c29c17c8" }
+source = { git = "https://github.itu.dk/brAInLab/recording-eye-tracking.git#cc4d0400a1d98867f758fd93c0277cb4bb57cde6" }
 dependencies = [
     { name = "pylsl" },
-    { name = "pyyaml" },
 ]
 
 [[package]]

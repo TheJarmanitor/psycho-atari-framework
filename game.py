@@ -95,10 +95,10 @@ class GameScreen:  # labels for tutorials and regular games
                 (
                     self.participant_id,
                     self.game_name,
-                    str(self.trial_number),
-                    str(self.start_timestamp),
-                    str(timestamp),
-                    str(info["frame_number"]),
+                    self.trial_number,
+                    self.start_timestamp,
+                    timestamp,
+                    info["frame_number"],
                 )
             )
 
