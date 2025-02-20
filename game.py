@@ -21,7 +21,7 @@ class GameScreen:  # labels for tutorials and regular games
         self,
         participant_id,
         game_name,
-        session_number=0,
+        trial_number=0,
         fullscreen=False,
         tutorial=False,
         time_limit=None,
@@ -29,31 +29,30 @@ class GameScreen:  # labels for tutorials and regular games
         game_mode=None,
         game_difficulty=None,
         logs_path="logs",
-        joystick=False,
         outlet=None,
     ) -> None:
         self.participant_id = participant_id
 
         self.time_limit = time_limit
         self.game_name = game_name
-        self.session_number = session_number
+        self.trial_number = trial_number
         self.tutorial = tutorial
-        self.game_id = int.from_bytes(
-            hashlib.sha256(self.game_name.encode()).digest()[:4], "little"
-        )
+        # self.game_id = int.from_bytes(
+        #     hashlib.sha256(self.game_name.encode()).digest()[:4], "little"
+        # )
         self.start_timestamp = int(datetime.timestamp(datetime.now()) * 1000)
         self.fps = fps
         self.logs = []
         self.logs_path = logs_path
         self.game_mode = game_mode
         self.game_difficulty = game_difficulty
-        self.outlet = outlet
+        self.stream = stream
         if not pygame.get_init():
             pygame.init()
         if fullscreen:
             pygame.RESIZABLE = pygame.FULLSCREEN
         env = gym.make(
-            self.game_name,
+            f"ALE/{self.game_name}",
             obs_type="ram",
             render_mode="rgb_array",
             frameskip=1,
@@ -83,7 +82,7 @@ class GameScreen:  # labels for tutorials and regular games
             os.path.join(
                 logs_path,
                 f"{self.participant_id}".zfill(5)
-                + f"_{self.game_id}_{'tutorial' if self.tutorial else self.session_number}_{self.start_timestamp}",
+                + f"_{self.game_name}_{self.trial_number}_{self.start_timestamp}",
             ),
             self.logs,
         )
@@ -91,15 +90,16 @@ class GameScreen:  # labels for tutorials and regular games
     def callback(self, obs_t, obs_tp1, action, rew, terminated, truncated, info):
         timestamp = int(datetime.timestamp(datetime.now()) * 1000)
 
-        if self.outlet:
-            self.outlet.push_sample(
-                [
+        if self.stream:
+            self.stream.send_data(
+                (
                     self.participant_id,
-                    self.game_id,
+                    self.game_name,
+                    self.trial_number,
                     self.start_timestamp,
                     timestamp,
                     info["frame_number"],
-                ]
+                )
             )
 
         if (
@@ -113,14 +113,13 @@ class GameScreen:  # labels for tutorials and regular games
         self.logs.append(
             {
                 "participant_id": self.participant_id,
-                "session_number": self.session_number,
+                "trial_number": self.trial_number,
                 "tutorial": self.tutorial,
-                "game_id": self.game_id,
+                "game_name": self.game_name,
                 "game_mode": self.game_mode,
                 "game_difficulty": self.game_difficulty,
                 "start_timestamp": self.start_timestamp,
                 "timestamp": timestamp,
-                "fps": self.fps,
                 "obs_t": obs_t,
                 "obs_tp1": obs_tp1,
                 "action": action,
@@ -168,6 +167,7 @@ class StartScreen:
             time.sleep(1)
 
             self.running = False
+
 
     def run(self):
         self.wait_for_start()

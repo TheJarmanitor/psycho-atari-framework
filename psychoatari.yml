@@ -1,0 +1,15 @@
+name: PsychoAtariFramework
+type: game
+datatype: float32
+sourceid: todo
+frequency: 150
+channels:
+  - { label: USERID, unit: string }
+  - { label: GYMID, unit: string }
+  - { label: TRIAL, unit: int }
+  - { label: STIMES, unit: int }
+  - { label: TIMES, unit: int }
+  - { label: FRAME, unit: int }
+custom:
+  - name: manufacturer
+    value: BrAInLab

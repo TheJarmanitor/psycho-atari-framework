@@ -1,4 +1,4 @@
-from game import GameScreen
+from game import GameScreen, StartScreen
 from survey import MultipleChoiceQuestion, Survey
 from random import shuffle
 from copy import deepcopy
@@ -15,6 +15,7 @@ def main():  # add with "tutorial version", later with random difficulties
         "slightly disagree",
         "Disagree",
         "Strongly disagree",
+
     ]
     participant_id = str(uuid.uuid4())
     with open("miniPXI.txt", "r") as f:
@@ -35,6 +36,15 @@ def main():  # add with "tutorial version", later with random difficulties
     game_names = list(game_details.keys())  # change to list of possiblities
 
     ## Tutorial version
+    StartScreen(countdown=5).run()
+    for game in game_names:
+        GameScreen(
+            participant_id=participant_id,
+            game_name=f"{game}-v5",
+            time_limit=20,
+            tutorial=True,
+            trial_number=0,
+        )
 
     for i in range(3):
         shuffle(game_names)
@@ -43,11 +53,11 @@ def main():  # add with "tutorial version", later with random difficulties
             game_mode, game_difficulty = game_list[game_name].pop()
             GameScreen(
                 participant_id=participant_id,
-                game_name=f"ALE/{game_name}-v5",
-                time_limit=100,
+                game_name=f"{game_name}-v5",
+                time_limit=20,
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
-                session_number=i + 1,
+                trial_number=i + 1,
             )
 
             shuffle(questions)
