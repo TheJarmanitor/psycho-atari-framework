@@ -29,7 +29,7 @@ class GameScreen:  # labels for tutorials and regular games
         game_mode=None,
         game_difficulty=None,
         logs_path="logs",
-        outlet=None,
+        stream=None,
     ) -> None:
         self.participant_id = participant_id
 
@@ -95,10 +95,10 @@ class GameScreen:  # labels for tutorials and regular games
                 (
                     self.participant_id,
                     self.game_name,
-                    self.trial_number,
-                    self.start_timestamp,
-                    timestamp,
-                    info["frame_number"],
+                    str(self.trial_number),
+                    str(self.start_timestamp),
+                    str(timestamp),
+                    str(info["frame_number"]),
                 )
             )
 

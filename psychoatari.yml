@@ -1,6 +1,6 @@
 name: PsychoAtariFramework
 type: game
-datatype: float32
+datatype: string
 sourceid: todo
 frequency: 150
 channels:
