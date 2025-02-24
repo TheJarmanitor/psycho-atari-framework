@@ -4,6 +4,7 @@ from random import shuffle
 from copy import deepcopy
 import uuid
 import itertools
+from brainlablsl import create_stream
 
 
 def main():  # add with "tutorial version", later with random difficulties
@@ -20,6 +21,8 @@ def main():  # add with "tutorial version", later with random difficulties
     participant_id = str(uuid.uuid4())
     with open("miniPXI.txt", "r") as f:
         questions = [MultipleChoiceQuestion(line.strip(), answers) for line in f]
+    with open("psychoatari.yml", 'r') as f:
+        stream = create_stream(f)
 
     game_details = {
         "Turmoil": {"modes": [x for x in range(4)], "difficulties": [0]},
@@ -41,9 +44,11 @@ def main():  # add with "tutorial version", later with random difficulties
         GameScreen(
             participant_id=participant_id,
             game_name=f"{game}-v5",
-            time_limit=20,
+            time_limit=120,
             tutorial=True,
             trial_number=0,
+	    logs_path="test_logs",
+	    stream=stream
         )
 
     for i in range(3):
@@ -54,10 +59,12 @@ def main():  # add with "tutorial version", later with random difficulties
             GameScreen(
                 participant_id=participant_id,
                 game_name=f"{game_name}-v5",
-                time_limit=20,
+                time_limit=120,
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
                 trial_number=i + 1,
+		logs_path="test_logs",
+		stream=stream
             )
 
             shuffle(questions)
