@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "ale-py < 0.10.1",
+    "brainlabgp3",
     "brainlablsl",
+    "cffi>=1.17.1",
     "gymnasium < 1.0.0",
     "ipykernel>=6.29.5",
     "matplotlib>=3.9.2",
@@ -14,9 +16,11 @@ dependencies = [
     "pandas>=2.2.3",
     "pygame>=2.6.1",
     "pylsl>=1.16.2",
+    "pywin32>=308",
     "pyyaml>=6.0.2",
     "ruff>=0.7.3",
 ]
 
 [tool.uv.sources]
 brainlablsl = { git = "https://github.itu.dk/brAInLab/recording-eye-tracking.git" }
+brainlabgp3 = { git = "https://github.itu.dk/brAInLab/brainlabgp3.git" }
