@@ -5,6 +5,8 @@ from copy import deepcopy
 import uuid
 import itertools
 from brainlablsl import create_stream
+import subprocess
+import sys
 
 
 def main():  # add with "tutorial version", later with random difficulties
@@ -39,6 +41,7 @@ def main():  # add with "tutorial version", later with random difficulties
     game_names = list(game_details.keys())  # change to list of possiblities
 
     ## Tutorial version
+    subprocess.Popen([sys.executable, 'record.py'])
     StartScreen(countdown=5).run()
     for game in game_names:
         GameScreen(
