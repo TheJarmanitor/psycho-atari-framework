@@ -66,7 +66,6 @@ version = "0.0.1"
 source = { git = "https://github.itu.dk/brAInLab/recording-eye-tracking.git#cc4d0400a1d98867f758fd93c0277cb4bb57cde6" }
 dependencies = [
     { name = "pylsl" },
-    { name = "pyyaml" },
 ]
 
 [[package]]
@@ -85,7 +84,7 @@ dependencies = [
     { name = "pandas" },
     { name = "pygame" },
     { name = "pylsl" },
-    { name = "pywin32" },
+    { name = "pywin32", marker = "sys_platform == 'windows'" },
     { name = "pyyaml" },
     { name = "ruff" },
 ]
@@ -103,7 +102,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "pygame", specifier = ">=2.6.1" },
     { name = "pylsl", specifier = ">=1.16.2" },
-    { name = "pywin32", specifier = ">=308" },
+    { name = "pywin32", marker = "sys_platform == 'windows'", specifier = ">=308" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "ruff", specifier = ">=0.7.3" },
 ]

@@ -16,7 +16,7 @@ dependencies = [
     "pandas>=2.2.3",
     "pygame>=2.6.1",
     "pylsl>=1.16.2",
-    "pywin32>=308",
+    "pywin32>=308; sys_platform == 'windows'",
     "pyyaml>=6.0.2",
     "ruff>=0.7.3",
 ]
