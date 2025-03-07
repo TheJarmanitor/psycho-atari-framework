@@ -53,6 +53,7 @@ def main():  # add with "tutorial version", later with random difficulties
 	    logs_path="test_logs",
 	    stream=stream
         )
+    StartScreen(countdown=5).run()
 
     for i in range(3):
         shuffle(game_names)
@@ -81,6 +82,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 "difficulty": [game_difficulty],
             }
             survey.collect_responses("survey_responses.csv", surveyor_info=extra_info)
+        StartScreen(countdown=5).run()
 
 
 if __name__ == "__main__":
