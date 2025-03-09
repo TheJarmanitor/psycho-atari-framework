@@ -71,7 +71,7 @@ class GameScreen:  # labels for tutorials and regular games
             fps=self.fps,
             keys_to_action=keys,
             callback=self.callback,
-            zoom=3,
+            zoom=6,
         )
         # infoObject = pygame.display.Info()
         # print(infoObject)
@@ -145,9 +145,11 @@ class StartScreen:
         self.started = False
 
     def display_message(self, message):
-        self.screen.fill((0,0,0))
+        self.screen.fill((0, 0, 0))
         text_surface = self.font.render(message, True, (255, 0, 0))
-        text_rect = text_surface.get_rect(center = (self.screen.get_width() //2, self.screen.get_height() //2))
+        text_rect = text_surface.get_rect(
+            center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+        )
         self.screen.blit(text_surface, text_rect)
         pygame.display.flip()
 
@@ -157,7 +159,7 @@ class StartScreen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                elif event.type == pygame.KEYDOWN and event.key == pygame. K_RETURN:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     self.start_countdown()
                     return
 
@@ -168,7 +170,36 @@ class StartScreen:
 
             self.running = False
 
-
     def run(self):
         self.wait_for_start()
+        pygame.quit()
+
+
+class MessageScreen:
+    def __init__(
+        self,
+        screen_width=800,
+        screen_height=600,
+        countdown=5,
+        message="None",
+        outlet=None,
+    ):
+        pygame.init()
+        self.screen = pygame.display.set_mode((screen_width, screen_height))
+        self.font = pygame.font.Font(None, 48)
+        self.countdown = countdown
+        self.message = message
+
+    def display_message(self):
+        self.screen.fill((0, 0, 0))
+        text_surface = self.font.render(self.message, True, (255, 0, 0))
+        text_rect = text_surface.get_rect(
+            center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+        )
+        self.screen.blit(text_surface, text_rect)
+        pygame.display.flip()
+
+    def run(self):
+        self.display_message()
+        time.sleep(self.countdown)
         pygame.quit()

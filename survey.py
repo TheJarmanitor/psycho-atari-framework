@@ -24,7 +24,7 @@ class Question:
     def display(self, screen, font):
         """Display the question text."""
         text_surface = font.render(self.question_text, True, BLACK)
-        screen.blit(text_surface, (50, 50))
+        screen.blit(text_surface, (50, 100))
 
     def handle_event(self, event):
         """Handle user input for the question."""
@@ -46,28 +46,102 @@ class MultipleChoiceQuestion(Question):
     def display(self, screen, font):
         """Display the multiple-choice question with options."""
         super().display(screen, font)
-        screen_width, screen_height = screen.get_size()
+        sw, sh = screen.get_size()
 
-        # Dynamically calculate positions based on screen size
-        row_height = screen_height // 6
-        col_width = screen_width // 4
+        grid_top = 150  # Adjust as needed for your question text
+        available_height = sh - grid_top
+        cell_width = sw / 3
+        cell_height = available_height / 3
+
+        # Compute centers for each cell in a 3x3 grid.
+        # We use only the middle cell of row 2 for the middle row.
+        centers = [
+            (
+                cell_width / 2,
+                grid_top + cell_height / 2,
+            ),  # Top row, left: Option 0 (Strongly disagree)
+            (
+                cell_width + cell_width / 2,
+                grid_top + cell_height / 2,
+            ),  # Top row, center: Option 1 (Disagree)
+            (
+                2 * cell_width + cell_width / 2,
+                grid_top + cell_height / 2,
+            ),  # Top row, right: Option 2 (Slightly disagree)
+            (
+                cell_width + cell_width / 2,
+                grid_top + cell_height + cell_height / 2,
+            ),  # Middle row, center: Option 3 (Neutral)
+            (
+                cell_width / 2,
+                grid_top + 2 * cell_height + cell_height / 2,
+            ),  # Bottom row, left: Option 4 (Slightly agree)
+            (
+                cell_width + cell_width / 2,
+                grid_top + 2 * cell_height + cell_height / 2,
+            ),  # Bottom row, center: Option 5 (Agree)
+            (
+                2 * cell_width + cell_width / 2,
+                grid_top + 2 * cell_height + cell_height / 2,
+            ),  # Bottom row, right: Option 6 (Strongly agree)
+        ]
+
+        center_left = (
+            cell_width / 2,
+            grid_top + cell_height + cell_height / 2,
+        )  # Row 1, Col 0
+        center_right = (
+            2 * cell_width + cell_width / 2,
+            grid_top + cell_height + cell_height / 2,
+        )  # Row 1, Col 2
+        # Define square size as 80% of the cell dimensions
+        square_width = cell_width * 0.8
+        square_height = cell_height * 0.8
 
         # Define matrix layout
-        positions = [
-            (col_width, row_height),  # Top Row: Slightly Agree
-            (2 * col_width, row_height),  # Top Row: Agree
-            (3 * col_width, row_height),  # Top Row: Strongly Agree
-            (2 * col_width, 2 * row_height),  # Middle Row: Neutral
-            (col_width, 3 * row_height),  # Bottom Row: Slightly Disagree
-            (2 * col_width, 3 * row_height),  # Bottom Row: Disagree
-            (3 * col_width, 3 * row_height),  # Bottom Row: Strongly Disagreewww
-        ]
+
         for i, option in enumerate(self.options):
-            color = BLUE if self.selected_option == i else BLACK
-            option_text = f"{option}"
-            text_surface = font.render(option_text, True, color)
-            x, y = positions[i]
-            screen.blit(text_surface, (x, y))
+            # Compute a gradient from red (option 0) to green (option 6)
+            r = 255 - int(i * 255 / 6)
+            g = int(i * 255 / 6)
+            b = 0
+            gradient_color = (r, g, b)
+
+            center = centers[i]
+            rect = pygame.Rect(0, 0, cell_width, cell_height)
+            rect.center = center
+
+            # Draw filled rectangle with gradient color.
+            pygame.draw.rect(screen, gradient_color, rect)
+
+            # If this option is selected, draw a blue border.
+            if self.selected_option == i:
+                pygame.draw.rect(screen, BLUE, rect, 5)
+
+            # Render the option text (centered in the square)
+            text_surface = font.render(option, True, BLACK)
+            text_rect = text_surface.get_rect(center=rect.center)
+            screen.blit(text_surface, text_rect)
+            # Draw arrows in the unused grid cells:
+        arrow_size = min(cell_width, cell_height) * 0.5
+
+        # Left arrow (back) at center_left: triangle pointing left
+        clx, cly = center_left
+        left_arrow = [
+            (clx + arrow_size / 2, cly - arrow_size / 2),
+            (clx - arrow_size / 2, cly),
+            (clx + arrow_size / 2, cly + arrow_size / 2),
+        ]
+        pygame.draw.polygon(screen, BLACK, left_arrow)
+
+        # Right arrow (next) at center_right: triangle pointing right
+        crx, cry = center_right
+        right_arrow = [
+            (crx - arrow_size / 2, cry - arrow_size / 2),
+            (crx + arrow_size / 2, cry),
+            (crx - arrow_size / 2, cry + arrow_size / 2),
+        ]
+        pygame.draw.polygon(screen, BLACK, right_arrow)
 
     def handle_event(self, event):
         scale = [
@@ -148,15 +222,36 @@ class Survey:
     def display_current_question(self):
         """Display the current question or thank-you message if survey is complete."""
         self.screen.fill(WHITE)
+
+        sw, sh = self.screen.get_size()
+        progress = self.current_question_index / len(self.questions)
+        bar_width = sw * 0.8
+        bar_height = 20
+        bar_x = sw * 0.1
+        bar_y = 10
+        # Background of the progress bar (light gray)
+        pygame.draw.rect(
+            self.screen, (200, 200, 200), (bar_x, bar_y, bar_width, bar_height)
+        )
+        # Filled part (blue)
+        pygame.draw.rect(
+            self.screen, BLUE, (bar_x, bar_y, bar_width * progress, bar_height)
+        )
+        # Progress percentage text
+        progress_percent = int(progress * 100)
+        progress_text = self.font.render(f"{progress_percent}% completed", True, BLACK)
+        self.screen.blit(progress_text, (bar_x, bar_y + bar_height + 5))
+
         if self.current_question_index < len(self.questions):
             self.questions[self.current_question_index].display(self.screen, self.font)
         else:
             # Display a thank-you message when the survey is complete
-            thank_you_text = "You're done! Now Relax for a bit :)"
+            thank_you_text = "You're done! Now Relax for a bit."
             text_surface = self.font.render(thank_you_text, True, GREEN)
             self.screen.blit(
                 text_surface, (self.screen_width // 4, self.screen_height // 2)
             )
+
         pygame.display.flip()
 
     def handle_event(self, event):
