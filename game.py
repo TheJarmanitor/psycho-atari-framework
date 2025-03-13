@@ -96,9 +96,13 @@ class GameScreen:  # labels for tutorials and regular games
                     self.participant_id,
                     self.game_name,
                     self.trial_number,
+                    self.game_mode,
+                    self.game_difficulty,
                     self.start_timestamp,
                     timestamp,
                     info["frame_number"],
+                    terminated,
+                    truncated,
                 )
             )
 
@@ -114,20 +118,12 @@ class GameScreen:  # labels for tutorials and regular games
             {
                 "participant_id": self.participant_id,
                 "trial_number": self.trial_number,
-                "tutorial": self.tutorial,
                 "game_name": self.game_name,
-                "game_mode": self.game_mode,
-                "game_difficulty": self.game_difficulty,
-                "start_timestamp": self.start_timestamp,
-                "timestamp": timestamp,
                 "obs_t": obs_t,
                 "obs_tp1": obs_tp1,
                 "action": action,
                 "rew": rew,
-                "terminated": terminated,
-                "truncated": truncated,
                 "info": info,
-                "timeout": timeout,
             }
         )
 
