@@ -12,6 +12,9 @@ from brainlabgp3 import BrAInLabGP3
 
 
 def main():
+    MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
+    #BrAInLabGP3().calibrate(show_calibration_result_time=5,calibration_result_log="calib.log")
+    StartScreen(countdown=5).run()
     # participant_id = str(uuid.uuid4())
     # with open("psychoatari.yml", "r") as f:
     #     stream = create_stream(f)
@@ -34,7 +37,7 @@ def main():
 
     # subprocess.Popen([sys.executable, 'record.py'])
 
-    # StartScreen(countdown=5).run()
+    # StartScreen(countdown=5).run() 
     # MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
 
     # Likert scale options in the required order.
@@ -56,7 +59,7 @@ def main():
         ),
         MultipleChoiceQuestion(
             "The color scheme is visually appealing.", likert_options
-        ),
+        )
     ]
     survey = Survey(questions, screen_width=800, screen_height=600, fullscreen=False)
     survey.run()

@@ -71,7 +71,7 @@ class GameScreen:  # labels for tutorials and regular games
             fps=self.fps,
             keys_to_action=keys,
             callback=self.callback,
-            zoom=6,
+            zoom=5,
         )
         # infoObject = pygame.display.Info()
         # print(infoObject)

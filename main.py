@@ -55,10 +55,10 @@ def main():  # add with "tutorial version", later with random difficulties
         )
 
     for i in range(3):
-        MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
-        BrAInLabGP3().calibrate(
-            show_calibration_result_time=5, calibration_result_log="calib.log"
-        )
+        #MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
+        #BrAInLabGP3().calibrate(
+        #    show_calibration_result_time=5, calibration_result_log="calib.log"
+        #)
         StartScreen(countdown=5).run()
         shuffle(game_names)
         for game_name in game_names:
@@ -86,9 +86,9 @@ def main():  # add with "tutorial version", later with random difficulties
                 "difficulty": [game_difficulty],
             }
             survey.collect_responses("survey_responses.csv", surveyor_info=extra_info)
-    MessageScreen(
-        message="Experiment has finished. Wait for somebody to come to you", countdown=5
-    ).run()
+    #MessageScreen(
+    #    message="Experiment has finished. Wait for somebody to come to you", countdown=5
+    #).run()
 
 
 if __name__ == "__main__":
