@@ -6,15 +6,20 @@ import uuid
 import itertools
 import subprocess
 import sys
+import json
 
 from brainlablsl import create_stream
 from brainlabgp3 import BrAInLabGP3
 
 
 def main():
-    MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
-    #BrAInLabGP3().calibrate(show_calibration_result_time=5,calibration_result_log="calib.log")
-    StartScreen(countdown=5).run()
+    # message_screen = MessageScreen(message="Hold on. Calibration will begin soon", countdown=5)
+    # start_screen = StartScreen(countdown=5)
+
+    with open("miniPXI.json") as f:
+        survey_questions = json.load(f)
+
+    print(survey_questions.keys())
     # participant_id = str(uuid.uuid4())
     # with open("psychoatari.yml", "r") as f:
     #     stream = create_stream(f)
@@ -37,7 +42,7 @@ def main():
 
     # subprocess.Popen([sys.executable, 'record.py'])
 
-    # StartScreen(countdown=5).run() 
+    # StartScreen(countdown=5).run()
     # MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
 
     # Likert scale options in the required order.
@@ -59,10 +64,10 @@ def main():
         ),
         MultipleChoiceQuestion(
             "The color scheme is visually appealing.", likert_options
-        )
+        ),
     ]
-    survey = Survey(questions, screen_width=800, screen_height=600, fullscreen=False)
-    survey.run()
+    # message_screen.run()
+    # start_screen.run()
 
 
 if __name__ == "__main__":

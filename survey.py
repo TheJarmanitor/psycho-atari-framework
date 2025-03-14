@@ -2,6 +2,7 @@ import pygame
 import os
 import pandas as pd
 from random import randint
+from random import shuffle
 
 # import pandas as pd  # Importing pandas for DataFrame handling
 
@@ -17,8 +18,9 @@ FONT_SIZE = 36
 class Question:
     """Base class for a question in the survey."""
 
-    def __init__(self, question_text):
+    def __init__(self, question_text, question_label=None):
         self.question_text = question_text
+        self.label = question_label if question_label is not None else question_text
         self.response = None
 
     def display(self, screen, font):
@@ -102,8 +104,8 @@ class MultipleChoiceQuestion(Question):
 
         for i, option in enumerate(self.options):
             # Compute a gradient from red (option 0) to green (option 6)
-            r = 255 - int(i * 255 / 6)
-            g = int(i * 255 / 6)
+            r = int(i * 255 / 6)
+            g = 255 - int(i * 255 / 6)
             b = 0
             gradient_color = (r, g, b)
 
@@ -197,20 +199,26 @@ class Survey:
         # participant_id,
         # game_id,
         questions,
+        labels,
         screen_width=800,
         screen_height=600,
         fullscreen=False,
-        outlet=None,
+        shuffle=True,
+        stream=None
     ):
         # self.participant_id = participant_id,
         # self.game_id = game_id,
         self.questions = questions
+        self.labels = labels
         self.current_question_index = 0
         self.running = True
         self.fullscreen = fullscreen
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.outlet = outlet
+        self.stream = stream
+
+        if shuffle:
+            shuffle
 
         pygame.init()
         self.screen = pygame.display.set_mode(
@@ -269,18 +277,13 @@ class Survey:
         """Check if the survey is complete."""
         return self.current_question_index >= len(self.questions)
 
-    def collect_responses(self, data_file, surveyor_info):
+    def send_responses(self, surveyor_info):
         """Collects questions and responses into a DataFrame."""
-        data = {
-            question.question_text: [question.response] for question in self.questions
-        }
-        surveyor_info.update(data)
-        df = pd.DataFrame(surveyor_info)
-        if os.path.exists(data_file):
-            df_historic = pd.read_csv(data_file)
-            df = pd.concat([df_historic, df], ignore_index=True, axis=0)
-
-        df.to_csv(data_file, index=False)
+        if self.stream:
+            data = {
+                question.label: [question.response] for question in self.questions
+            }
+            # surveyor_info.update(data)
 
     def run(self, random_timer=True):
         """Run the main loop for the survey."""
