@@ -1,15 +1,21 @@
-name: PsychoAtariFramework
-type: game
+name: miniPXI
+type: survey
 datatype: string
 sourceid: todo
 frequency: 150
 channels:
-  - { label: USERID, unit: string }
-  - { label: GYMID, unit: string }
-  - { label: TRIAL, unit: int }
-  - { label: STIMES, unit: int }
-  - { label: TIMES, unit: int }
-  - { label: FRAME, unit: int }
+  - { label: "AA", unit: string }
+  - { label: "CH", unit: string }
+  - { label: "EC", unit: string }
+  - { label: "GR", unit: string }
+  - { label: "PF", unit: string }
+  - { label: "AUT", unit: string }
+  - { label: "CUR", unit: string }
+  - { label: "IMM", unit: string }
+  - { label: "MAS", unit: string }
+  - { label: "MEA", unit: string }
+  - { label: "ENJ", unit: string }
+  - { label: "TIMES", unit: int }
 custom:
   - name: manufacturer
     value: BrAInLab

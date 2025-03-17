@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from random import randint
 from random import shuffle
+from datetime import datetime
 
 # import pandas as pd  # Importing pandas for DataFrame handling
 
@@ -34,8 +35,8 @@ class Question:
 
 
 class MultipleChoiceQuestion(Question):
-    def __init__(self, question_text, options):
-        super().__init__(question_text)
+    def __init__(self, question_text, options, question_label=None):
+        super().__init__(question_text, question_label)
         self.options = options
         self.selected_option = None
         # self.keybinds = {
@@ -203,7 +204,7 @@ class Survey:
         screen_width=800,
         screen_height=600,
         fullscreen=False,
-        shuffle=True,
+        shuffle_q=True,
         stream=None
     ):
         # self.participant_id = participant_id,
@@ -217,8 +218,9 @@ class Survey:
         self.screen_height = screen_height
         self.stream = stream
 
-        if shuffle:
-            shuffle
+        if shuffle_q:
+            shuffle(questions)
+
 
         pygame.init()
         self.screen = pygame.display.set_mode(
@@ -277,12 +279,18 @@ class Survey:
         """Check if the survey is complete."""
         return self.current_question_index >= len(self.questions)
 
-    def send_responses(self, surveyor_info):
+    def send_responses(self, ):
+        timestamp = int(datetime.timestamp(datetime.now()) * 1000)
+        index_map = {v: i for i, v in enumerate(a_list)}
+        sorted(a.items(), key=lambda pair: index_map[pair[0]])
         """Collects questions and responses into a DataFrame."""
         if self.stream:
-            data = {
-                question.label: [question.response] for question in self.questions
-            }
+            self.stream.send_data(
+                (
+                    self.questions[self.current_question_index]
+
+                )
+            )
             # surveyor_info.update(data)
 
     def run(self, random_timer=True):

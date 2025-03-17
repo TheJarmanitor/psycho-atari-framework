@@ -119,6 +119,8 @@ class GameScreen:  # labels for tutorials and regular games
                 "participant_id": self.participant_id,
                 "trial_number": self.trial_number,
                 "game_name": self.game_name,
+                "game_mode": self.game_mode,
+                "game_difficulty": self.game_difficulty,
                 "obs_t": obs_t,
                 "obs_tp1": obs_tp1,
                 "action": action,
