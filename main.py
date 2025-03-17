@@ -3,6 +3,7 @@ from survey import MultipleChoiceQuestion, Survey
 from random import shuffle
 from copy import deepcopy
 import uuid
+import json
 import itertools
 from brainlablsl import create_stream
 from brainlabgp3 import BrAInLabGP3
@@ -21,10 +22,17 @@ def main():  # add with "tutorial version", later with random difficulties
         "Strongly disagree",
     ]
     participant_id = str(uuid.uuid4())
-    with open("miniPXI.txt", "r") as f:
-        questions = [MultipleChoiceQuestion(line.strip(), answers) for line in f]
+    with open("miniPXI.json") as f:
+        survey_questions = json.load(f)
+    questions = [
+        MultipleChoiceQuestion(survey_questions[label], answers, label)
+        for label in survey_questions.keys()
+    ]
+    labels = list(survey_questions.keys())
     with open("psychoatari.yml", "r") as f:
         stream = create_stream(f)
+    with open("pxi.yml", "r") as f:
+        pxi_stream = create_stream(f)
 
     game_details = {
         "Turmoil": {"modes": [x for x in range(4)], "difficulties": [0]},
@@ -55,10 +63,10 @@ def main():  # add with "tutorial version", later with random difficulties
         )
 
     for i in range(3):
-        #MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
-        #BrAInLabGP3().calibrate(
-        #    show_calibration_result_time=5, calibration_result_log="calib.log"
-        #)
+        MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
+        BrAInLabGP3().calibrate(
+            show_calibration_result_time=5, calibration_result_log="calib.log"
+        )
         StartScreen(countdown=5).run()
         shuffle(game_names)
         for game_name in game_names:
@@ -75,20 +83,19 @@ def main():  # add with "tutorial version", later with random difficulties
                 stream=stream,
             )
 
-            shuffle(questions)
-            survey = Survey(deepcopy(questions), screen_width=1000, screen_height=600)
+            survey = Survey(deepcopy(questions), labels, screen_width=1000, screen_height=600, stream=)
             survey.run()
             extra_info = {
-                "participant_id": [participant_id],
-                "session_number": [i + 1],
-                "game": [game_name],
-                "mode": [game_mode],
-                "difficulty": [game_difficulty],
+                "USERID": participant_id,
+                "GYMID": game_name,
+                "TRIAL": i + 1,
+                "MODE": game_mode,
+                "DIFF": game_difficulty,
             }
-            survey.collect_responses("survey_responses.csv", surveyor_info=extra_info)
-    #MessageScreen(
-    #    message="Experiment has finished. Wait for somebody to come to you", countdown=5
-    #).run()
+            survey.send_responses(extra_info)
+    MessageScreen(
+        message="Experiment has finished. Wait for somebody to come to you", countdown=5
+    ).run()
 
 
 if __name__ == "__main__":

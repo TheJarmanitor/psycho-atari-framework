@@ -4,6 +4,11 @@ datatype: string
 sourceid: todo
 frequency: 150
 channels:
+  - { label: USERID, unit: string }
+  - { label: GYMID, unit: string }
+  - { label: TRIAL, unit: int }
+  - { label: MODE, unit: int }
+  - { label: DIFF, unit: int }
   - { label: "AA", unit: string }
   - { label: "CH", unit: string }
   - { label: "EC", unit: string }

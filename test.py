@@ -20,17 +20,29 @@ def main():
         survey_questions = json.load(f)
 
     likert_options = [
-        "Strongly disagree",
-        "Disagree",
-        "Slightly disagree",
-        "Neutral",
         "Slightly agree",
         "Agree",
-        "Strongly agree",
+        "Strongly Agree",
+        "Neutral",
+        "slightly disagree",
+        "Disagree",
+        "Strongly disagree",
     ]
-    questions = [MultipleChoiceQuestion(survey_questions[label], likert_options, label) for label in survey_questions.keys()]
-
-
+    questions = [
+        MultipleChoiceQuestion(survey_questions[label], likert_options, label)
+        for label in survey_questions.keys()
+    ]
+    labels = list(survey_questions.keys())
+    survey = Survey(questions, labels, screen_width=1000, screen_height=600)
+    survey.run()
+    extra_info = {
+        "USERID": "00000",
+        "GYMID": "your mom",
+        "TRIAL": 1,
+        "MODE": 1,
+        "DIFF": 1,
+    }
+    survey.send_responses(extra_info)
 
 
 if __name__ == "__main__":

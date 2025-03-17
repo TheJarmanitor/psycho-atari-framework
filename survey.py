@@ -205,7 +205,7 @@ class Survey:
         screen_height=600,
         fullscreen=False,
         shuffle_q=True,
-        stream=None
+        stream=None,
     ):
         # self.participant_id = participant_id,
         # self.game_id = game_id,
@@ -220,7 +220,6 @@ class Survey:
 
         if shuffle_q:
             shuffle(questions)
-
 
         pygame.init()
         self.screen = pygame.display.set_mode(
@@ -279,19 +278,23 @@ class Survey:
         """Check if the survey is complete."""
         return self.current_question_index >= len(self.questions)
 
-    def send_responses(self, ):
+    def send_responses(self, surveyor_info):
         timestamp = int(datetime.timestamp(datetime.now()) * 1000)
-        index_map = {v: i for i, v in enumerate(a_list)}
-        sorted(a.items(), key=lambda pair: index_map[pair[0]])
+
+        data = {question.label: question.response for question in self.questions}
+
+        index_map = {v: i for i, v in enumerate(list(self.labels))}
+
+        surveyor_info.update(
+            dict(sorted(data.items(), key=lambda pair: index_map[pair[0]]))
+        )
+
+        surveyor_info["TIMES"] = timestamp
         """Collects questions and responses into a DataFrame."""
         if self.stream:
-            self.stream.send_data(
-                (
-                    self.questions[self.current_question_index]
-
-                )
-            )
-            # surveyor_info.update(data)
+            self.stream.send_data((answer for answer in surveyor_info.values()))
+        print(index_map)
+        print(surveyor_info)
 
     def run(self, random_timer=True):
         """Run the main loop for the survey."""
