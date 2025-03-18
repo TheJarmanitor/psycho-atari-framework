@@ -83,7 +83,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 stream=stream,
             )
 
-            survey = Survey(deepcopy(questions), labels, screen_width=1000, screen_height=600, stream=)
+            survey = Survey(deepcopy(questions), labels, screen_width=1000, screen_height=600, stream=pxi_stream)
             survey.run()
             extra_info = {
                 "USERID": participant_id,
