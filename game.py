@@ -98,10 +98,10 @@ class GameScreen:  # labels for tutorials and regular games
                     self.trial_number,
                     self.game_mode,
                     self.game_difficulty,
-                    self.start_timestamp,
-                    timestamp,
                     info["frame_number"],
                     info["action"],
+                    self.start_timestamp,
+                    timestamp,
                     terminated,
                     truncated
                 )

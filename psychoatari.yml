@@ -9,10 +9,10 @@ channels:
   - { label: TRIAL, unit: int }
   - { label: MODE, unit: int }
   - { label: DIFF, unit: int }
-  - { label: STIMES, unit: int }
-  - { label: TIMES, unit: int }
   - { label: FRAME, unit: int }
   - { label: ACTION, unit: string }
+  - { label: STIMES, unit: int }
+  - { label: TIMES, unit: int }
   - { label: TERM, unit: int }
   - { label: TRUNC, unit: int }
 custom:
