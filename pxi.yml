@@ -2,7 +2,7 @@ name: miniPXI
 type: survey
 datatype: string
 sourceid: todo
-frequency: 150
+frequency: 30
 channels:
   - { label: USERID, unit: string }
   - { label: GYMID, unit: string }
@@ -20,6 +20,7 @@ channels:
   - { label: "MAS", unit: string }
   - { label: "MEA", unit: string }
   - { label: "ENJ", unit: string }
+  - { label: "STIMES", unit: int }
   - { label: "TIMES", unit: int }
 custom:
   - name: manufacturer

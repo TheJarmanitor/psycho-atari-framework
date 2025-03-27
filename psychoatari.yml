@@ -12,6 +12,7 @@ channels:
   - { label: STIMES, unit: int }
   - { label: TIMES, unit: int }
   - { label: FRAME, unit: int }
+  - { label: ACTION, unit: string }
   - { label: TERM, unit: int }
   - { label: TRUNC, unit: int }
 custom:

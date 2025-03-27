@@ -217,6 +217,7 @@ class Survey:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.stream = stream
+        self.start_timestamp = int(datetime.timestamp(datetime.now()) * 1000)
 
         if shuffle_q:
             shuffle(questions)
@@ -289,6 +290,7 @@ class Survey:
             dict(sorted(data.items(), key=lambda pair: index_map[pair[0]]))
         )
 
+        surveyor_info["STIMES"] = self.start_timestamp
         surveyor_info["TIMES"] = timestamp
         """Collects questions and responses into a DataFrame."""
         if self.stream:

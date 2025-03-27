@@ -101,8 +101,9 @@ class GameScreen:  # labels for tutorials and regular games
                     self.start_timestamp,
                     timestamp,
                     info["frame_number"],
+                    info["action"],
                     terminated,
-                    truncated,
+                    truncated
                 )
             )
 
