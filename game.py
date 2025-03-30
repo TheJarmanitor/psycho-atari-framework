@@ -28,7 +28,7 @@ class GameScreen:  # labels for tutorials and regular games
         fps=30,
         game_mode=None,
         game_difficulty=None,
-        logs_path="logs",
+        logs_path=".logs",
         stream=None,
     ) -> None:
         self.participant_id = participant_id
@@ -103,7 +103,7 @@ class GameScreen:  # labels for tutorials and regular games
                     self.start_timestamp,
                     timestamp,
                     terminated,
-                    truncated
+                    truncated,
                 )
             )
 

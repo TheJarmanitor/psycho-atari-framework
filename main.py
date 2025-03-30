@@ -9,6 +9,8 @@ from brainlablsl import create_stream
 from brainlabgp3 import BrAInLabGP3
 import subprocess
 import sys
+import os
+import glob
 
 
 def main():  # add with "tutorial version", later with random difficulties
@@ -21,7 +23,11 @@ def main():  # add with "tutorial version", later with random difficulties
         "Disagree",
         "Strongly disagree",
     ]
-    participant_id = str(uuid.uuid4())
+    logs_path = ".logs"
+    id = 1
+    while glob.glob(".logs/sub-P%03d*.npz" % (id,)):
+        id += 1
+    participant_id = "P%03d" % id
     with open("miniPXI.json") as f:
         survey_questions = json.load(f)
     questions = [
@@ -31,8 +37,10 @@ def main():  # add with "tutorial version", later with random difficulties
     labels = list(survey_questions.keys())
     with open("psychoatari.yml", "r") as f:
         stream = create_stream(f)
+        stream = None
     with open("pxi.yml", "r") as f:
         pxi_stream = create_stream(f)
+        pxi_stream = None
 
     game_details = {
         "Turmoil": {"modes": [x for x in range(4)], "difficulties": [0]},
@@ -53,12 +61,12 @@ def main():  # add with "tutorial version", later with random difficulties
     StartScreen(countdown=5).run()
     for game in game_names:
         GameScreen(
-            participant_id=participant_id,
+            participant_id=f"sub-{participant_id}",
             game_name=f"{game}-v5",
             time_limit=120,
             tutorial=True,
             trial_number=0,
-            logs_path="test_logs",
+            logs_path=logs_path,
             stream=stream,
         )
 
@@ -83,7 +91,13 @@ def main():  # add with "tutorial version", later with random difficulties
                 stream=stream,
             )
 
-            survey = Survey(deepcopy(questions), labels, screen_width=1000, screen_height=600, stream=pxi_stream)
+            survey = Survey(
+                deepcopy(questions),
+                labels,
+                screen_width=1000,
+                screen_height=600,
+                stream=pxi_stream,
+            )
             survey.run()
             extra_info = {
                 "USERID": participant_id,

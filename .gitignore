@@ -9,6 +9,7 @@ wheels/
 # Virtual environments
 .venv
 .ropeproject
+.logs
 
 # experiment specific stuff
 
