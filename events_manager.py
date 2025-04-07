@@ -106,7 +106,9 @@ def detect_box_first_hit(box_data, pre=5, post=10, fps=30):
     for i in range(1, len(box_data)):
         if box_data[i - 1, 18] == 0 and box_data[i, 18] >= 1:
             start_frame = i - int(pre * fps)
-            end_frame = i + int(post * fps)
+            end_frame = min(
+                i + int(post * fps), len(box_data) - 1
+            )
             events.append((start_frame, end_frame))
             break  # Only record the first hit
     return events
@@ -144,7 +146,9 @@ def detect_turmoil_tank_destruction(turm_data, pre=10, post=5, fps=30):
             if appear is not None:
                 destroyed = i
                 start_frame = appear - int(pre * fps)
-                end_frame = destroyed + int(post * fps)
+                end_frame = min(
+                    destroyed + int(post * fps), len(turm_data) - 1
+                )
                 events.append((start_frame, end_frame))
                 # break
     return remove_overlaps(events)
@@ -156,7 +160,9 @@ def detect_turmoil_death(turm_data, pre=10, post=5, fps=30):
         lives = turm_data[i, 57]
         if turm_data[i - 1, 57] != turm_data[i, 57]:
             start_frame = i - int(pre * fps)
-            end_frame = i + int(post * fps)
+            end_frame = min(
+                i + int(post * fps), len(turm_data) - 1
+            )
             events.append((start_frame, end_frame))
     return remove_overlaps(events)
 
@@ -201,7 +207,9 @@ def detect_word_freebie_use(word_data, pre=5, post=7, fps=30):
         freebie_shots = word_data[i, 96]
         if word_data[i - 1, 96] == 0 and freebie_shots > 0:
             start_frame = i - int(pre * fps)
-            end_frame = i + int(post * fps)
+            end_frame = min(
+                i + int(post * fps), len(word_data) - 1
+            )
             events.append((start_frame, end_frame))
     return remove_overlaps(events)
 
