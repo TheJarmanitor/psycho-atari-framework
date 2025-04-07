@@ -1,7 +1,7 @@
 ale-py==0.10.0
 asttokens==3.0.0
-brainlabgp3 @ git+https://github.itu.dk/brAInLab/brainlabgp3.git@64afd3594a8ba4005d1bf0adf2d101e89274f3e0
-brainlablsl @ git+https://github.itu.dk/brAInLab/recording-eye-tracking.git@cc4d0400a1d98867f758fd93c0277cb4bb57cde6
+#brainlabgp3 @ git+https://github.itu.dk/brAInLab/brainlabgp3.git@64afd3594a8ba4005d1bf0adf2d101e89274f3e0
+#brainlablsl @ git+https://github.itu.dk/brAInLab/recording-eye-tracking.git@cc4d0400a1d98867f758fd93c0277cb4bb57cde6
 cffi==1.17.1
 cloudpickle==3.0.0
 comm==0.2.2

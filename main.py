@@ -5,8 +5,8 @@ from copy import deepcopy
 import uuid
 import json
 import itertools
-from brainlablsl import create_stream
-from brainlabgp3 import BrAInLabGP3
+#from brainlablsl import create_stream
+#from brainlabgp3 import BrAInLabGP3
 import subprocess
 import sys
 import os
@@ -23,9 +23,9 @@ def main():  # add with "tutorial version", later with random difficulties
         "Disagree",
         "Strongly disagree",
     ]
-    logs_path = ".logs"
+    logs_path = "test_logs"
     id = 1
-    while glob.glob(".logs/sub-P%03d*.npz" % (id,)):
+    while glob.glob(".logs/P%03d*.npz" % (id,)):
         id += 1
     participant_id = "P%03d" % id
     with open("miniPXI.json") as f:
@@ -35,12 +35,12 @@ def main():  # add with "tutorial version", later with random difficulties
         for label in survey_questions.keys()
     ]
     labels = list(survey_questions.keys())
-    with open("psychoatari.yml", "r") as f:
-        stream = create_stream(f)
-        stream = None
-    with open("pxi.yml", "r") as f:
-        pxi_stream = create_stream(f)
-        pxi_stream = None
+    # with open("psychoatari.yml", "r") as f:
+    #     stream = create_stream(f)
+    #     stream = None
+    # with open("pxi.yml", "r") as f:
+    #     pxi_stream = create_stream(f)
+    #     pxi_stream = None
 
     game_details = {
         "Turmoil": {"modes": [x for x in range(4)], "difficulties": [0]},
@@ -57,7 +57,7 @@ def main():  # add with "tutorial version", later with random difficulties
     game_names = list(game_details.keys())  # change to list of possiblities
 
     ## Tutorial version
-    subprocess.Popen([sys.executable, "record.py"])
+    #subprocess.Popen([sys.executable, "record.py"])
     StartScreen(countdown=5).run()
     for game in game_names:
         GameScreen(
@@ -67,14 +67,14 @@ def main():  # add with "tutorial version", later with random difficulties
             tutorial=True,
             trial_number=0,
             logs_path=logs_path,
-            stream=stream,
+            #stream=stream,
         )
 
     for i in range(3):
         MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
-        BrAInLabGP3().calibrate(
-            show_calibration_result_time=5, calibration_result_log="calib.log"
-        )
+        #BrAInLabGP3().calibrate(
+        #    show_calibration_result_time=5, calibration_result_log="calib.log"
+        #)
         StartScreen(countdown=5).run()
         shuffle(game_names)
         for game_name in game_names:
@@ -88,7 +88,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 game_difficulty=game_difficulty,
                 trial_number=i + 1,
                 logs_path="test_logs",
-                stream=stream,
+                #stream=stream,
             )
 
             survey = Survey(
@@ -96,7 +96,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 labels,
                 screen_width=1000,
                 screen_height=600,
-                stream=pxi_stream,
+                #stream=pxi_stream,
             )
             survey.run()
             extra_info = {

@@ -1,5 +1,6 @@
 import numpy as np
 from events_manager import *
+from glob import glob
 
 
 
@@ -76,23 +77,47 @@ WordZapper:
                 fps: frames per second
 """
 
+logs_folder = input()
+print(logs_folder)
 
 test_load = np.load(
-    "logs/erica_test_Boxing-v5_0.npz",
+    f"{logs_folder}\P001_Boxing-v5_1.npz",
     allow_pickle=True,
 )
 
+game_files=glob(f"{logs_folder}\*.npz")
+
+print(game_files)
+
 game_data = test_load.f.arr_0
 
-game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
-game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
-game_frames = game_frames[..., ::-1]
+# game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
+# game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
+# game_frames = game_frames[..., ::-1]
 
+functions_dict = {
+    "Turmoil": [detect_turmoil_score_stagnation, detect_turmoil_tank_destruction, detect_turmoil_death, detect_turmoil_prize],
+    "Boxing": [detect_box_score_difference, detect_box_score_stagnation, detect_box_first_hit],
+    "WordZapper": [detect_word_letter_stagnation, detect_word_freebie_use]
+}
 
-for i, (s_frame, e_frame) in enumerate(
-    detect_box_first_hit(
-        game_states,
+for file in game_files:
+    file_name = file.split("\\")[1]
+    user, game_name, trial = tuple(file_name.split("_"))
+    game_load = np.load(
+    file,
+    allow_pickle=True,
     )
-):
-    event_frames = game_frames[range(s_frame, e_frame)]
-    create_video(event_frames, f"first_hit_{i}.avi")
+    game_data = game_load.f.arr_0
+    game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
+    game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
+    game_frames = game_frames[..., ::-1]
+    for funct in functions_dict[game_name]:
+        for (s_frame, e_frame) in funct(game_states):
+            video_name = f"{user}_{trial}_{game_name}_.avi"
+            event_frames = game_frames[range(s_frame, e_frame)]
+            create_video(event_frames, f"{user}_{trial}_{game_name}_first_hit_{i}.avi")
+
+
+
+    
