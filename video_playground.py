@@ -19,7 +19,7 @@ Boxing:
             pre: how many seconds prior to the event you want captured. set at 10
             post: how many seconds after the event you want captured. set at 5
             fps: frames per second
-    detect_box_stagnation:
+    detect_box_score_stagnation:
         Check a time frame when the scores don't changes for a certain time
         Parameters:
             box_data: the ram info for the game boxing
@@ -80,16 +80,11 @@ WordZapper:
 logs_folder = input()
 print(logs_folder)
 
-test_load = np.load(
-    f"{logs_folder}\P001_Boxing-v5_1.npz",
-    allow_pickle=True,
-)
 
-game_files=glob(f"{logs_folder}\*.npz")
+game_files=glob(f"{logs_folder}/*.npz")
 
 print(game_files)
 
-game_data = test_load.f.arr_0
 
 # game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
 # game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
@@ -102,8 +97,9 @@ functions_dict = {
 }
 
 for file in game_files:
-    file_name = file.split("\\")[1]
+    file_name = file.split("/")[1]
     user, game_name, trial = tuple(file_name.split("_"))
+    game_name = game_name.removesuffix("-v5")
     game_load = np.load(
     file,
     allow_pickle=True,
@@ -113,11 +109,7 @@ for file in game_files:
     game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
     game_frames = game_frames[..., ::-1]
     for funct in functions_dict[game_name]:
-        for (s_frame, e_frame) in funct(game_states):
-            video_name = f"{user}_{trial}_{game_name}_.avi"
+        for i, (s_frame, e_frame) in enumerate(funct(game_states)):
+
             event_frames = game_frames[range(s_frame, e_frame)]
-            create_video(event_frames, f"{user}_{trial}_{game_name}_first_hit_{i}.avi")
-
-
-
-    
+            create_video(event_frames, f"{user}_{trial}_{game_name}_{funct.__name__}_{i}.avi")
