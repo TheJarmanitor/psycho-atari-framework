@@ -81,7 +81,7 @@ logs_folder = input()
 print(logs_folder)
 
 
-game_files=glob(f"{logs_folder}/*.npz")
+game_files=glob(f"{logs_folder}\\*.npz")
 
 print(game_files)
 
@@ -97,7 +97,7 @@ functions_dict = {
 }
 
 for file in game_files:
-    file_name = file.split("/")[1]
+    file_name = file.split("\\")[1]
     user, game_name, trial = tuple(file_name.split("_"))
     game_name = game_name.removesuffix("-v5")
     game_load = np.load(
