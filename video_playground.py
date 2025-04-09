@@ -1,6 +1,6 @@
 import numpy as np
 from events_manager import *
-from glob import glob
+from pathlib import Path
 
 
 
@@ -77,18 +77,17 @@ WordZapper:
                 fps: frames per second
 """
 
-logs_folder = input()
+logs_folder = "test_logs"
+output_folder = "videos"
+participant_id = "P001"
+trial=1
 print(logs_folder)
 
 
-game_files=glob(f"{logs_folder}\\*.npz")
+logs_path = Path(logs_folder)
+game_files=list(logs_path.glob(f"*{participant_id}*{trial}.npz"))
 
-print(game_files)
 
-
-# game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
-# game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
-# game_frames = game_frames[..., ::-1]
 
 functions_dict = {
     "Turmoil": [detect_turmoil_score_stagnation, detect_turmoil_tank_destruction, detect_turmoil_death, detect_turmoil_prize],
@@ -97,9 +96,11 @@ functions_dict = {
 }
 
 for file in game_files:
-    file_name = file.split("\\")[1]
+
+    file_name = file.parts[1]
     user, game_name, trial = tuple(file_name.split("_"))
     game_name = game_name.removesuffix("-v5")
+    trial = trial.removesuffix(".npz")
     game_load = np.load(
     file,
     allow_pickle=True,
@@ -112,4 +113,6 @@ for file in game_files:
         for i, (s_frame, e_frame) in enumerate(funct(game_states)):
 
             event_frames = game_frames[range(s_frame, e_frame)]
-            create_video(event_frames, f"{user}_{trial}_{game_name}_{funct.__name__}_{i}.avi")
+            video_path = Path(f"{output_folder}/{user}/{game_name}/trial_{trial}")
+            video_path.mkdir(parents=True, exist_ok=True)
+            create_video(event_frames, video_path / f"{funct.__name__}_{i}.avi")

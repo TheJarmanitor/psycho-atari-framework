@@ -5,6 +5,7 @@ game_name = "Boxing" # Names include Boxing, Turmoil, WordZapper
 
 logs_folder= "logs" # where do you want your logs to be
 game_mode = 0 # game mode, specific to each game
+
 '''
 turmoil: difficulty : 0 | modes: 0,1,2,3,4
 WordZapper: difficulty: 0,1,2,3 | modes: 0,1,2,3
