@@ -20,7 +20,7 @@ def generate_videos(logs_folder, participant_id, trial, output_folder="videos"):
 
     for file in game_files:
 
-        file_name = file.parts[1]
+        file_name = file.parts[-1]
         user, game_name, trial = tuple(file_name.split("_"))
         game_name = game_name.removesuffix("-v5")
         trial = trial.removesuffix(".npz")
@@ -36,6 +36,8 @@ def generate_videos(logs_folder, participant_id, trial, output_folder="videos"):
             for i, (s_frame, e_frame) in enumerate(funct(game_states)):
 
                 event_frames = game_frames[range(s_frame, e_frame)]
-                video_path = Path(f"{output_folder}/{user}/{game_name}/trial_{trial}")
+                video_path = Path(output_folder)
+                video_path = video_path / user / game_name / f"trial_{trial}"
+                #print(video_path)
                 video_path.mkdir(parents=True, exist_ok=True)
                 create_video(event_frames, video_path / f"{funct.__name__}_{i}.avi")

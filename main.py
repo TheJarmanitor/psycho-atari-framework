@@ -16,7 +16,7 @@ import glob
 
 
 
-def main():  # add with "tutorial version", later with random difficulties
+def main():  
     answers = [
         "Slightly agree",
         "Agree",
@@ -26,7 +26,8 @@ def main():  # add with "tutorial version", later with random difficulties
         "Disagree",
         "Strongly disagree",
     ]
-    logs_path = "test_logs"
+    logs_path = r"D:\Documents\atari_challenge\game_logs"
+    video_path = r"D:\Documents\atari_challenge\videos"
     id = 1
     while glob.glob(f"{logs_path}/P%03d*.npz" % (id,)):
         id += 1
@@ -40,10 +41,10 @@ def main():  # add with "tutorial version", later with random difficulties
     labels = list(survey_questions.keys())
     with open("psychoatari.yml", "r") as f:
         stream = create_stream(f)
-        stream = None
+        #stream = None
     with open("pxi.yml", "r") as f:
         pxi_stream = create_stream(f)
-        pxi_stream = None
+        #pxi_stream = None
 
     game_details = {
         "Turmoil": {"modes": [x for x in range(4)], "difficulties": [0]},
@@ -60,7 +61,7 @@ def main():  # add with "tutorial version", later with random difficulties
     game_names = list(game_details.keys())  # change to list of possiblities
 
     ## Tutorial version
-    subprocess.Popen([sys.executable, "record.py"])
+    #subprocess.Popen([sys.executable, "record.py"])
     StartScreen(countdown=5).run()
     for game in game_names:
         GameScreen(
@@ -72,13 +73,13 @@ def main():  # add with "tutorial version", later with random difficulties
             logs_path=logs_path,
             stream=stream,
         )
-    generate_videos(logs_path, participant_id, 0, output_folder="videos")
+    generate_videos(logs_path, participant_id, 0, output_folder=video_path)
 
     for i in range(3):
         MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
-        BrAInLabGP3().calibrate(
-           show_calibration_result_time=5, calibration_result_log="calib.log"
-        )
+      #  BrAInLabGP3().calibrate(
+      #     show_calibration_result_time=5, calibration_result_log="calib.log"
+      #  )
         StartScreen(countdown=5).run()
         shuffle(game_names)
         for game_name in game_names:

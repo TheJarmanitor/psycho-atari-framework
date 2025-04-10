@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 # %%
-test_load = np.load("logs/test_20250325/576457e7-3a4e-4960-ba12-defe1bee9e68_Boxing-v5_0_1742909198954.npz", allow_pickle=True)
+test_load = np.load("test_logs/P001_Turmoil-v5_0.npz", allow_pickle=True)
 print(test_load)
 # %%
 game_data = test_load.f.arr_0
