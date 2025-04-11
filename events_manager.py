@@ -64,6 +64,12 @@ def remove_overlaps(segments):
         prev_end = cur_end
     return result
 
+####### General functions
+# %%
+
+def get_timeframe(data, start, end, fps=30):
+    return [(start * fps, end * fps)]
+
 
 ####### boxing functions
 # %%
