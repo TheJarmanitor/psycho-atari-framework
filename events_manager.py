@@ -5,8 +5,8 @@ import cv2
 
 """
 Boxing:
-- track when difference between player score and enemy score is +- 5 (10s before and 5s after)
-- record when player and enemy score stagnates for at least 5s
+- track when difference between player score and enemy score is +- 8 (10s before and 5s after)
+- record when player and enemy score stagnates for at least 10s
 - track when player hits enemy correctly for the first time (5s before and 10s after)
 
 Turmoil:
@@ -17,7 +17,7 @@ Turmoil:
 
 Word Zapper:
 - track when word completion stagnates for at least 7s
-- 5s before and 7 after completion symbols are hit
+- 5s before and 10 after completion symbols are hit
 - 5s before and after player is hit by asteroid for the first time (not implemented)
 - 5s before and 7 after player is hit by deadly asteroid or shuffling asteroid (not implemented)
 
@@ -73,7 +73,7 @@ def get_timeframe(data, start, end, fps=30):
 
 ####### boxing functions
 # %%
-def detect_box_score_difference(box_data, threshold=5, pre=10, post=5, fps=30):
+def detect_box_score_difference(box_data, threshold=8, pre=10, post=5, fps=30):
     """Detect when the score difference reaches the threshold."""
     events = []
     for i in range(len(box_data)):
@@ -87,7 +87,7 @@ def detect_box_score_difference(box_data, threshold=5, pre=10, post=5, fps=30):
 
 
 # %%
-def detect_box_score_stagnation(box_data, stagnation=5, fps=30):
+def detect_box_score_stagnation(box_data, stagnation=10, fps=30):
     events = []
     start_idx = 0
     while start_idx < len(box_data):
@@ -173,7 +173,7 @@ def detect_turmoil_death(turm_data, pre=10, post=5, fps=30):
     return remove_overlaps(events)
 
 
-def detect_turmoil_prize(turm_data, pre=3, post=3, fps=30):
+def detect_turmoil_prize(turm_data, pre=4, post=7, fps=30):
     events = []
     appear = None  # Frame index where prize first appears
     removed = None  # Frame index where prize disappears
@@ -207,7 +207,7 @@ def detect_turmoil_prize(turm_data, pre=3, post=3, fps=30):
 # Word Zapper
 
 
-def detect_word_freebie_use(word_data, pre=5, post=7, fps=30):
+def detect_word_freebie_use(word_data, pre=5, post=10, fps=30):
     events = []
     for i in range(300, len(word_data)):
         freebie_shots = word_data[i, 96]
