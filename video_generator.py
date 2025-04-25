@@ -63,4 +63,4 @@ def generate_videos(logs_folder, participant_id, trial, output_folder="videos"):
                     funct_name = funct.func.__name__
                 else:
                     funct_name = funct.__name__
-                create_video(event_frames, video_path / f"{funct_name}_{i}.avi")
+                create_video(event_frames, video_path / f"{s_frame}_{e_frame}_{funct_name}_{i}.avi")

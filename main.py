@@ -61,7 +61,7 @@ def main():
     game_names = list(game_details.keys())  # change to list of possiblities
 
     ## Tutorial version
-    #subprocess.Popen([sys.executable, "record.py"])
+    subprocess.Popen([sys.executable, "record.py"])
     StartScreen(countdown=5).run()
     for game in game_names:
         GameScreen(
@@ -77,9 +77,9 @@ def main():
 
     for i in range(3):
         MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
-      #  BrAInLabGP3().calibrate(
-      #     show_calibration_result_time=5, calibration_result_log="calib.log"
-      #  )
+        BrAInLabGP3().calibrate(
+           show_calibration_result_time=5, calibration_result_log="calib.log"
+        )
         StartScreen(countdown=5).run()
         shuffle(game_names)
         for game_name in game_names:
@@ -92,7 +92,7 @@ def main():
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
                 trial_number=i + 1,
-                logs_path="test_logs",
+                logs_path=logs_path,
                 stream=stream,
             )
 
@@ -112,7 +112,7 @@ def main():
                 "DIFF": game_difficulty,
             }
             survey.send_responses(extra_info)
-        generate_videos(logs_path, participant_id, i+1, output_folder="videos")
+        generate_videos(logs_path, participant_id, i+1, output_folder=video_path)
     MessageScreen(
         message="Experiment has finished. Wait for somebody to come to you", countdown=5
     ).run()
