@@ -68,6 +68,8 @@ def remove_overlaps(segments):
 # %%
 
 def get_timeframe(data, start, end, fps=30):
+    if len(data) < end:
+        end = len(data)
     return [(start * fps, end * fps)]
 
 
@@ -80,6 +82,7 @@ def detect_box_score_difference(box_data, threshold=8, pre=10, post=5, fps=30):
         player_score, enemy_score = box_data[i, 18], box_data[i, 19]
         if abs(player_score - enemy_score) >= threshold:
             start = max(0, i - (pre * fps))
+        if abs (box_data[i-1, 18] - box_data[i-1, 19]) >= threshold and abs(player_score - enemy_score) < threshold:
             end = min(len(box_data), i + (post * fps))
             events.append((start, end))
     return remove_overlaps(events)
@@ -220,7 +223,7 @@ def detect_word_freebie_use(word_data, pre=5, post=10, fps=30):
     return remove_overlaps(events)
 
 
-def detect_word_letter_stagnation(word_data, stagnation=10, fps=30):
+def detect_word_letter_stagnation(word_data, stagnation=10, post=3, fps=30):
     events = []
     start_idx = 300
     while start_idx < len(word_data):
@@ -230,7 +233,7 @@ def detect_word_letter_stagnation(word_data, stagnation=10, fps=30):
         while end_idx < len(word_data) and word_data[end_idx, 88] == letter_index:
             end_idx += 1
         if (end_idx - start_idx) >= stagnation * fps:
-            events.append((start_idx, end_idx - 1))
+            events.append((start_idx, min(len(word_data, end_idx + (post * fps)))))
         start_idx = end_idx
     return remove_overlaps(events)
 

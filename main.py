@@ -64,21 +64,21 @@ def main():
     subprocess.Popen([sys.executable, "record.py"])
     StartScreen(countdown=5).run()
     for game in game_names:
-        GameScreen(
-            participant_id=f"{participant_id}",
-            game_name=f"{game}-v5",
-            time_limit=120,
-            tutorial=True,
-            trial_number=0,
-            logs_path=logs_path,
-            stream=stream,
-        )
+       GameScreen(
+           participant_id=f"{participant_id}",
+           game_name=f"{game}-v5",
+           time_limit=120,
+           tutorial=True,
+           trial_number=0,
+           logs_path=logs_path,
+           stream=stream,
+       )
     generate_videos(logs_path, participant_id, 0, output_folder=video_path)
 
     for i in range(3):
         MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
         BrAInLabGP3().calibrate(
-           show_calibration_result_time=5, calibration_result_log="calib.log"
+          show_calibration_result_time=5, calibration_result_log="calib.log"
         )
         StartScreen(countdown=5).run()
         shuffle(game_names)
