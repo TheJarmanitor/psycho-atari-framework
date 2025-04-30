@@ -57,7 +57,7 @@ def generate_videos(logs_folder, participant_id, trial, output_folder="videos"):
                 event_frames = game_frames[range(s_frame, e_frame)]
                 video_path = Path(output_folder)
                 video_path = video_path / user / game_name / f"trial_{trial}"
-                #print(video_path)
+                print(video_path)
                 video_path.mkdir(parents=True, exist_ok=True)
                 if isinstance(funct, partial):
                     funct_name = funct.func.__name__

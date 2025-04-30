@@ -82,12 +82,13 @@ def detect_box_score_difference(box_data, threshold=8, pre=10, post=5, fps=30):
         player_score, enemy_score = box_data[i, 18], box_data[i, 19]
         if abs(player_score - enemy_score) >= threshold:
             start = max(0, i - (pre * fps))
-        if abs (box_data[i-1, 18] - box_data[i-1, 19]) >= threshold and abs(player_score - enemy_score) < threshold:
-            end = min(len(box_data), i + (post * fps))
+            end_idx = i
+            while abs(box_data[end_idx, 18] - box_data[end_idx, 19]) >= threshold:
+                end_idx +=1
+            end = min(len(box_data), end_idx + (post * fps))
             events.append((start, end))
     return remove_overlaps(events)
     # return events
-
 
 # %%
 def detect_box_score_stagnation(box_data, stagnation=10, fps=30):
@@ -114,7 +115,7 @@ def detect_box_first_hit(box_data, pre=5, post=10, fps=30):
     events = []
     for i in range(1, len(box_data)):
         if box_data[i - 1, 18] == 0 and box_data[i, 18] >= 1:
-            start_frame = i - int(pre * fps)
+            start_frame = max(0, i - int(pre * fps))
             end_frame = min(
                 i + int(post * fps), len(box_data) - 1
             )
@@ -233,7 +234,7 @@ def detect_word_letter_stagnation(word_data, stagnation=10, post=3, fps=30):
         while end_idx < len(word_data) and word_data[end_idx, 88] == letter_index:
             end_idx += 1
         if (end_idx - start_idx) >= stagnation * fps:
-            events.append((start_idx, min(len(word_data, end_idx + (post * fps)))))
+            events.append((start_idx, min(len(word_data), end_idx + (post * fps))))
         start_idx = end_idx
     return remove_overlaps(events)
 

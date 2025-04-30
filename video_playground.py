@@ -1,5 +1,7 @@
 import numpy as np
+from numpy.core.function_base import logspace
 from events_manager import *
+from video_generator import generate_videos
 from pathlib import Path
 from functools import partial
 
@@ -81,60 +83,32 @@ WordZapper:
 logs_folder = "test_logs"
 output_folder = "videos"
 participant_id = "P001"
-trial=1
-print(logs_folder)
+trial=0
 
+generate_videos(logs_folder, participant_id, trial, output_folder)
 
-logs_path = Path(logs_folder)
-game_files=list(logs_path.glob(f"*{participant_id}*{trial}.npz"))
+# for file in game_files:
 
-turmoil_initial_time = partial(get_timeframe, start=8, end=38)
-box_initial_time = partial(get_timeframe, start=0, end=30)
-word_initial_time = partial(get_timeframe, start=5, end=35)
+#     file_name = file.parts[-1]
+#     user, game_name, trial = tuple(file_name.split("_"))
+#     game_name = game_name.removesuffix("-v5")
+#     trial = trial.removesuffix(".npz")
+#     game_load = np.load(
+#     file,
+#     allow_pickle=True,
+#     )
+#     game_data = game_load.f.arr_0
+#     game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
+#     game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
+#     game_frames = game_frames[..., ::-1]
+#     for funct in functions_dict[game_name]:
+#         for i, (s_frame, e_frame) in enumerate(funct(game_states)):
 
-functions_dict = {
-    "Turmoil": [
-        turmoil_initial_time,
-        detect_turmoil_score_stagnation,
-        detect_turmoil_tank_destruction,
-        detect_turmoil_death,
-        detect_turmoil_prize
-    ],
-    "Boxing": [
-        box_initial_time,
-        detect_box_score_difference,
-        detect_box_score_stagnation,
-        detect_box_first_hit
-    ],
-    "WordZapper": [
-        word_initial_time,
-        detect_word_letter_stagnation,
-        detect_word_freebie_use
-    ]
-}
-
-for file in game_files:
-
-    file_name = file.parts[-1]
-    user, game_name, trial = tuple(file_name.split("_"))
-    game_name = game_name.removesuffix("-v5")
-    trial = trial.removesuffix(".npz")
-    game_load = np.load(
-    file,
-    allow_pickle=True,
-    )
-    game_data = game_load.f.arr_0
-    game_states = np.array([frame["obs_tp1"]["state"] for frame in game_data], dtype="f")
-    game_frames = np.array([frame["obs_tp1"]["pixels"] for frame in game_data])
-    game_frames = game_frames[..., ::-1]
-    for funct in functions_dict[game_name]:
-        for i, (s_frame, e_frame) in enumerate(funct(game_states)):
-
-            event_frames = game_frames[range(s_frame, e_frame)]
-            video_path = Path(f"{output_folder}/{user}/{game_name}/trial_{trial}")
-            video_path.mkdir(parents=True, exist_ok=True)
-            if isinstance(funct, partial):
-                funct_name = funct.func.__name__
-            else:
-                funct_name = funct.__name__
-            create_video(event_frames, video_path / f"{funct_name}_{i}.avi")
+#             event_frames = game_frames[range(s_frame, e_frame)]
+#             video_path = Path(f"{output_folder}/{user}/{game_name}/trial_{trial}")
+#             video_path.mkdir(parents=True, exist_ok=True)
+#             if isinstance(funct, partial):
+#                 funct_name = funct.func.__name__
+#             else:
+#                 funct_name = funct.__name__
+#             create_video(event_frames, video_path / f"{funct_name}_{i}.avi")
