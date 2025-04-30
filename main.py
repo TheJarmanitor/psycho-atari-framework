@@ -16,7 +16,7 @@ import glob
 
 
 
-def main():  
+def main():
     answers = [
         "Slightly agree",
         "Agree",
@@ -28,6 +28,8 @@ def main():
     ]
     logs_path = r"D:\Documents\atari_challenge\game_logs"
     video_path = r"D:\Documents\atari_challenge\videos"
+    # logs_path = "test_logs"
+    # video_path = "videos"
     id = 1
     while glob.glob(f"{logs_path}/P%03d*.npz" % (id,)):
         id += 1
