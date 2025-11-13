@@ -81,8 +81,8 @@ class GameScreen:  # labels for tutorials and regular games
         np.savez_compressed(
             os.path.join(
                 logs_path,
-                f"{self.participant_id}".zfill(5)
-                + f"_{self.game_name}_{self.trial_number}_{self.start_timestamp}",
+                f"{self.participant_id}"
+                + f"_{self.game_name}_{self.trial_number}",
             ),
             self.logs,
         )
@@ -99,7 +99,7 @@ class GameScreen:  # labels for tutorials and regular games
                     self.game_mode,
                     self.game_difficulty,
                     info["frame_number"],
-                    info["action"],
+                    action,
                     self.start_timestamp,
                     timestamp,
                     terminated,

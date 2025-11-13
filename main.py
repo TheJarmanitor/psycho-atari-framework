@@ -1,5 +1,6 @@
 from game import GameScreen, StartScreen, MessageScreen
 from survey import MultipleChoiceQuestion, Survey
+from video_generator import generate_videos
 from random import shuffle
 from copy import deepcopy
 import uuid
@@ -13,7 +14,9 @@ import os
 import glob
 
 
-def main():  # add with "tutorial version", later with random difficulties
+
+
+def main():
     answers = [
         "Slightly agree",
         "Agree",
@@ -23,9 +26,12 @@ def main():  # add with "tutorial version", later with random difficulties
         "Disagree",
         "Strongly disagree",
     ]
-    logs_path = ".logs"
+    logs_path = r"D:\Documents\atari_challenge\game_logs"
+    video_path = r"D:\Documents\atari_challenge\videos"
+    # logs_path = "test_logs"
+    # video_path = "videos"
     id = 1
-    while glob.glob(".logs/sub-P%03d*.npz" % (id,)):
+    while glob.glob(f"{logs_path}/P%03d*.npz" % (id,)):
         id += 1
     participant_id = "P%03d" % id
     with open("miniPXI.json") as f:
@@ -37,10 +43,10 @@ def main():  # add with "tutorial version", later with random difficulties
     labels = list(survey_questions.keys())
     with open("psychoatari.yml", "r") as f:
         stream = create_stream(f)
-        stream = None
+        #stream = None
     with open("pxi.yml", "r") as f:
         pxi_stream = create_stream(f)
-        pxi_stream = None
+        #pxi_stream = None
 
     game_details = {
         "Turmoil": {"modes": [x for x in range(4)], "difficulties": [0]},
@@ -60,20 +66,21 @@ def main():  # add with "tutorial version", later with random difficulties
     subprocess.Popen([sys.executable, "record.py"])
     StartScreen(countdown=5).run()
     for game in game_names:
-        GameScreen(
-            participant_id=f"sub-{participant_id}",
-            game_name=f"{game}-v5",
-            time_limit=120,
-            tutorial=True,
-            trial_number=0,
-            logs_path=logs_path,
-            stream=stream,
-        )
+       GameScreen(
+           participant_id=f"{participant_id}",
+           game_name=f"{game}-v5",
+           time_limit=120,
+           tutorial=True,
+           trial_number=0,
+           logs_path=logs_path,
+           stream=stream,
+       )
+    generate_videos(logs_path, participant_id, 0, output_folder=video_path)
 
     for i in range(3):
         MessageScreen(message="Hold on. Calibration will begin soon", countdown=5).run()
         BrAInLabGP3().calibrate(
-            show_calibration_result_time=5, calibration_result_log="calib.log"
+          show_calibration_result_time=5, calibration_result_log="calib.log"
         )
         StartScreen(countdown=5).run()
         shuffle(game_names)
@@ -87,7 +94,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 game_mode=game_mode,
                 game_difficulty=game_difficulty,
                 trial_number=i + 1,
-                logs_path="test_logs",
+                logs_path=logs_path,
                 stream=stream,
             )
 
@@ -107,6 +114,7 @@ def main():  # add with "tutorial version", later with random difficulties
                 "DIFF": game_difficulty,
             }
             survey.send_responses(extra_info)
+        generate_videos(logs_path, participant_id, i+1, output_folder=video_path)
     MessageScreen(
         message="Experiment has finished. Wait for somebody to come to you", countdown=5
     ).run()
